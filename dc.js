@@ -93,9 +93,31 @@ function plan(node, vals, scope, out) {
       if (resolve(child.getAttribute("value") ?? "", vals, scope)) plan(child, vals, scope, out)
       continue
     }
-    out.push({ tag, node: child, vals, scope })
+    /* The namespace comes from the **template** node, which the HTML parser
+       already resolved - an `<svg>` inside a `<template>` is a real
+       SVGElement. Without it `document.createElement("svg")` makes an HTML
+       unknown element: it parses, it has the right tag name, and it renders
+       nothing. Measured before this was fixed: 24 svg tags in the DOM and
+       zero `SVGElement`s, so the GitHub mark, every icon, the loading spinner
+       and the scribble under the headline were all invisible - and the state
+       glyphs had no intrinsic size, so their row misaligned. */
+    out.push({ tag, ns: child.namespaceURI, node: child, vals, scope })
   }
   return out
+}
+
+/**
+ * The DOM event an `on*` attribute means.
+ *
+ * The markup is written React-style, so the name is the attribute minus `on`,
+ * lowercased - with one substitution that matters. **React's `onChange` is the
+ * `input` event**, not the DOM's `change`. Taken literally, the confidence
+ * slider only moved its label once the drag ended; reported from use as having
+ * to stop sliding to see it change. The design means "as it moves".
+ */
+function eventOf(attribute) {
+  const name = attribute.slice(2).toLowerCase()
+  return name === "change" ? "input" : name
 }
 
 /** One dispatcher per element per event, reading a slot that render updates. */
@@ -124,10 +146,8 @@ function attributes(el, template, vals, scope) {
     const got = resolve(raw, vals, scope)
     if (attr.name.startsWith("on")) {
       /* Bound, never left on the element: an inline handler would need the
-         function to survive being turned into a string. The event name is the
-         rest of the attribute lowercased, because the markup writes it
-         React-style - onClick, onChange. */
-      if (typeof got === "function") bind(el, attr.name.slice(2).toLowerCase(), got)
+         function to survive being turned into a string. */
+      if (typeof got === "function") bind(el, eventOf(attr.name), got)
       continue
     }
     wanted.add(attr.name)
@@ -157,8 +177,15 @@ function patch(parent, wanted) {
     }
 
     let el = at
-    if (el === undefined || el.nodeType !== Node.ELEMENT_NODE || el.tagName.toLowerCase() !== want.tag) {
-      const made = document.createElement(want.tag)
+    if (
+      el === undefined ||
+      el.nodeType !== Node.ELEMENT_NODE ||
+      el.tagName.toLowerCase() !== want.tag ||
+      // The namespace is part of identity: an HTML `<a>` and an SVG `<a>` are
+      // different elements that share a tag name.
+      el.namespaceURI !== want.ns
+    ) {
+      const made = document.createElementNS(want.ns, want.tag)
       if (el === undefined) parent.append(made)
       else parent.replaceChild(made, el)
       el = made
