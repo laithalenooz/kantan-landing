@@ -98,12 +98,11 @@ a{color:#4b4bc8}a:hover{color:#3a3aa8}
 
     <div class="pop" style="margin:34px auto 0;max-width:520px;text-align:left;border-radius:20px;background:#111216;color:#f4f4f6;box-shadow:0 30px 70px -30px rgba(17,18,22,.7),inset 0 1px 0 rgba(255,255,255,.08);overflow:hidden;animation-delay:.55s">
       <div style="display:flex;align-items:center;gap:8px;padding:12px 14px 0 18px">
-        <span class="m" style="font-size:12px;color:#8a8f9c">three lines, honestly</span>
+        <span class="m" style="font-size:12px;color:#8a8f9c">one line, and you can read it first</span>
         <button onClick="{{copy}}" style="margin-left:auto;height:30px;padding:0 12px;border-radius:999px;border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.06);color:#f4f4f6;font-size:12.5px;font-weight:560;display:inline-flex;align-items:center;gap:6px"><svg class="ic" aria-hidden="true" viewBox="0 0 24 24" style="width:13px;height:13px"><rect width="14" height="14" x="8" y="8" rx="2"></rect><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path></svg>{{copyLabel}}</button>
       </div>
-      <pre class="m" style="margin:0;padding:12px 18px 18px;font-size:14.5px;line-height:1.9;overflow-x:auto"><span style="color:#ff8a4c">$</span> bun install
-<span style="color:#ff8a4c">$</span> bun run build   <span style="color:#6b7080"># needs Node, for Vite</span>
-<span style="color:#ff8a4c">$</span> bun run server  <span style="color:#6b7080"># 127.0.0.1:3100</span><span class="caret" style="display:inline-block;width:.6em;height:1.1em;margin-left:4px;vertical-align:-3px;background:#ff6a1a"></span></pre>
+      <pre class="m" style="margin:0;padding:12px 18px 4px;font-size:14.5px;line-height:1.9;overflow-x:auto"><span style="color:#ff8a4c">$</span> curl get.kantan.sh | sh<span class="caret" style="display:inline-block;width:.6em;height:1.1em;margin-left:4px;vertical-align:-3px;background:#ff6a1a"></span></pre>
+      <div class="m" style="padding:0 18px 16px;font-size:12px;color:#8a8f9c">read the source: <a href="https://kantan.sh/install.sh" style="color:#8a8f9c;text-decoration:underline;text-underline-offset:3px">kantan.sh/install.sh</a></div>
     </div>
   </div>
 
@@ -332,9 +331,9 @@ a{color:#4b4bc8}a:hover{color:#3a3aa8}
 
       <div style="display:flex;flex-direction:column;gap:14px">
         <div style="border-radius:26px;background:#fff;border:1px solid #e7e7eb;padding:22px 24px">
-          <div style="display:flex;flex-wrap:nowrap;align-items:center;gap:10px">
-            <h3 style="margin:0;flex:1 1 auto;min-width:0;font-size:18px;font-weight:700;letter-spacing:-.015em;text-wrap:balance">Ten states. Readable with the colour drained.</h3>
-            <button onClick="{{toggleDrain}}" aria-pressed="{{drain}}" class="ghost" style="margin-left:auto;flex:none;height:36px;min-width:150px;padding:0 14px;border-radius:999px;border:1px solid #d9d9df;background:#fafafb;font-size:13px;font-weight:600;color:#1e2026;white-space:nowrap;transition:background .25s,border-color .25s">{{drainLabel}}</button>
+          <div style="display:flex;flex-wrap:wrap;align-items:center;gap:10px">
+            <h3 style="margin:0;font-size:18px;font-weight:700;letter-spacing:-.015em">Ten states. Readable with the colour drained.</h3>
+            <button onClick="{{toggleDrain}}" aria-pressed="{{drain}}" class="ghost" style="margin-left:auto;height:36px;padding:0 14px;border-radius:999px;border:1px solid #d9d9df;background:#fafafb;font-size:13px;font-weight:600;color:#1e2026">{{drainLabel}}</button>
           </div>
           <div style="margin-top:18px;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:14px 8px;text-align:center;transition:filter .5s;{{drainStyle}}">
             <div style="display:flex;flex-direction:column;align-items:center;gap:8px"><span style="width:22px;height:22px;border-radius:50%;border:2.5px solid #a3a7b1;box-sizing:border-box"></span><span style="font-size:11.5px;color:#3a3d45">open</span></div>
@@ -416,8 +415,8 @@ a{color:#4b4bc8}a:hover{color:#3a3aa8}
     <h2 class="rv" style="margin:14px 0 0;max-width:20ch;font-size:clamp(36px,5.4vw,76px);line-height:1;font-weight:800;letter-spacing:-.045em;text-wrap:balance">It works, and it's rough in places.</h2>
 
     <div class="rv" style="margin-top:40px;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(220px,100%),1fr));gap:14px">
-      <div style="padding:24px;border-radius:24px;background:#fff;border:1px solid #e7e7eb"><div class="cnt" style="--n:73;font-size:clamp(48px,6vw,76px);line-height:1;font-weight:800;letter-spacing:-.05em;font-variant-numeric:tabular-nums"></div><div style="margin-top:8px;font-size:15px;color:#4a4e59">modules</div></div>
-      <div style="padding:24px;border-radius:24px;background:#fff;border:1px solid #e7e7eb"><div class="cnt" style="--n:2576;font-size:clamp(48px,6vw,76px);line-height:1;font-weight:800;letter-spacing:-.05em;font-variant-numeric:tabular-nums"></div><div style="margin-top:8px;font-size:15px;color:#4a4e59">tests</div></div>
+      <div style="padding:24px;border-radius:24px;background:#fff;border:1px solid #e7e7eb"><div class="cnt" style="--n:75;font-size:clamp(48px,6vw,76px);line-height:1;font-weight:800;letter-spacing:-.05em;font-variant-numeric:tabular-nums"></div><div style="margin-top:8px;font-size:15px;color:#4a4e59">modules</div></div>
+      <div style="padding:24px;border-radius:24px;background:#fff;border:1px solid #e7e7eb"><div class="cnt" style="--n:2591;font-size:clamp(48px,6vw,76px);line-height:1;font-weight:800;letter-spacing:-.05em;font-variant-numeric:tabular-nums"></div><div style="margin-top:8px;font-size:15px;color:#4a4e59">tests</div></div>
       <div style="padding:24px;border-radius:24px;background:#fff;border:1px solid #e7e7eb"><div class="cnt" style="--n:1;font-size:clamp(48px,6vw,76px);line-height:1;font-weight:800;letter-spacing:-.05em;font-variant-numeric:tabular-nums"></div><div style="margin-top:8px;font-size:15px;color:#4a4e59">skipped: the live smoke test, so CI can't spend money</div></div>
       <div style="padding:24px;border-radius:24px;background:#ff6a1a;color:#1a0b02"><div class="cnt" style="--n:1;font-size:clamp(48px,6vw,76px);line-height:1;font-weight:800;letter-spacing:-.05em;font-variant-numeric:tabular-nums"></div><div style="margin-top:8px;font-size:15px;font-weight:560">machine it has ever run on (WSL2). Be number two?</div></div>
     </div>
@@ -428,8 +427,8 @@ a{color:#4b4bc8}a:hover{color:#3a3aa8}
         <ul style="margin:16px 0 0;padding:0;list-style:none;display:flex;flex-direction:column;gap:12px;font-size:15.5px;line-height:1.5;color:#3a3d45">
           <li style="display:grid;grid-template-columns:18px minmax(0,1fr);gap:10px"><span aria-hidden="true" style="width:8px;height:8px;margin-top:8px;border-radius:50%;background:#ff6a1a"></span><span>The usage view only sees what kantan's own runs reported.</span></li>
           <li style="display:grid;grid-template-columns:18px minmax(0,1fr);gap:10px"><span aria-hidden="true" style="width:8px;height:8px;margin-top:8px;border-radius:50%;background:#ff6a1a"></span><span>A second account has to be named by hand, once.</span></li>
-          <li style="display:grid;grid-template-columns:18px minmax(0,1fr);gap:10px"><span aria-hidden="true" style="width:8px;height:8px;margin-top:8px;border-radius:50%;background:#ff6a1a"></span><span><span class="m" style="font-size:14px">src/run.ts</span> is 2,695 lines of one state machine.</span></li>
-          <li style="display:grid;grid-template-columns:18px minmax(0,1fr);gap:10px"><span aria-hidden="true" style="width:8px;height:8px;margin-top:8px;border-radius:50%;background:#ff6a1a"></span><span>One 731 KB bundle, no code splitting.</span></li>
+          <li style="display:grid;grid-template-columns:18px minmax(0,1fr);gap:10px"><span aria-hidden="true" style="width:8px;height:8px;margin-top:8px;border-radius:50%;background:#ff6a1a"></span><span><span class="m" style="font-size:14px">src/run.ts</span> is 2,817 lines of one state machine.</span></li>
+          <li style="display:grid;grid-template-columns:18px minmax(0,1fr);gap:10px"><span aria-hidden="true" style="width:8px;height:8px;margin-top:8px;border-radius:50%;background:#ff6a1a"></span><span>One 741 KB bundle, no code splitting.</span></li>
           <li style="display:grid;grid-template-columns:18px minmax(0,1fr);gap:10px"><span aria-hidden="true" style="width:8px;height:8px;margin-top:8px;border-radius:50%;background:#ff6a1a"></span><span>An event a future CLI adds shows up as raw JSON until someone gives it a row. It stays visible, though.</span></li>
         </ul>
       </div>
@@ -500,7 +499,7 @@ class Component extends DCLogic {
       repoUrl: this.props.repoUrl ?? 'https://github.com/',
       copyLabel: s.copied ? 'Copied' : 'Copy',
       copy: () => {
-        try { navigator.clipboard.writeText('bun install\nbun run build\nbun run server'); } catch (e) {}
+        try { navigator.clipboard.writeText('curl get.kantan.sh | sh'); } catch (e) {}
         this.setState({ copied: true });
         this.later(() => this.setState({ copied: false }), 1800);
       },
