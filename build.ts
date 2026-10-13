@@ -24,9 +24,25 @@
  */
 
 import { existsSync } from "node:fs"
-import { readFile, writeFile } from "node:fs/promises"
+import { copyFile, mkdir, readdir, readFile, writeFile } from "node:fs/promises"
+import { dirname, join } from "node:path"
 
-const [source = "Landing.dc.html", out = "index.html"] = process.argv.slice(2)
+/**
+ * Everything the site is made of, and nothing else, lands in `public/`.
+ *
+ * A build has a source and an output, and keeping them in one directory meant
+ * the deploy had to serve the source too - `build.ts`, the artboard, this
+ * README - and meant Vercel, whose default output directory is `public`, found
+ * nothing and stopped with "No Output Directory named public found". One
+ * directory that is exactly what ships is both zero-config there and the
+ * honest answer to "what gets uploaded".
+ */
+const OUT = "public"
+
+/** Served verbatim beside the page: not generated, so copied rather than built. */
+const STATIC = ["dc.js", "favicon.svg", "install.sh", "CNAME"]
+
+const [source = "Landing.dc.html", out = `${OUT}/index.html`] = process.argv.slice(2)
 
 /** The brand mark: a near-black rounded square and the attention-orange dot. */
 const ICON =
@@ -161,5 +177,25 @@ const head = [
 ]
 const page = head.join("\n")
 
+await mkdir(dirname(out), { recursive: true })
 await writeFile(out, page, "utf8")
-console.log(`wrote ${out} (${page.length} bytes) from ${source}`)
+
+for (const name of STATIC) {
+  await copyFile(name, join(OUT, name))
+}
+
+/* The screenshots. Copied rather than linked, because a symlink is not a file
+   to a static host and the deploy would serve a few bytes of path. */
+await mkdir(join(OUT, "assets"), { recursive: true })
+for (const name of await readdir("assets")) {
+  await copyFile(join("assets", name), join(OUT, "assets", name))
+}
+
+/* `og.png` is produced by `bun run og`, which is a separate step because it
+   needs a browser. Carried over when it exists so an ordinary build does not
+   have to shell out to Chrome, and a missing one is a warning rather than a
+   failure - the page still works, its social card just will not. */
+if (existsSync("og.png")) await copyFile("og.png", join(OUT, "og.png"))
+else console.warn("no og.png yet - run `bun run og` to make the social card")
+
+console.log(`wrote ${out} (${page.length} bytes) from ${source}, plus ${STATIC.length + 1} files and assets/`)

@@ -11,6 +11,8 @@
  */
 
 const out = "og.png"
+/* Written beside the source and copied into `public/` by the build, so the
+   card survives a `rm -rf public` and does not need Chrome on every deploy. */
 const page = `file://${import.meta.dir}/og.html`
 
 const chrome = Bun.spawn(

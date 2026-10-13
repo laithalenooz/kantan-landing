@@ -42,13 +42,28 @@ bun run dev       # both
 bun run og        # re-render og.png, the 1200x630 social card
 ```
 
-No dependencies, no bundler, no framework. `index.html` is committed, so
-publishing it is a static upload of this directory.
+No dependencies, no bundler, no framework.
+
+## What ships
+
+`public/` is the whole site and nothing else — the generated `index.html`, the
+hand-written `dc.js`, the favicon, the social card, the screenshots and
+`install.sh`. Publishing is a static upload of that one directory, and the
+source sitting beside it is not served.
+
+It is committed, so a deploy does not depend on the build running.
+`vercel.json` names it anyway, which is what fixes *"No Output Directory named
+public found"*: Vercel sees a `build` script in `package.json`, runs it, then
+looks for its default output directory. The build used to write `index.html`
+next to the source, so there was nothing for it to find.
+
+Any other static host wants the same thing: serve `public/`, nothing above it.
 
 ## Hosting
 
-`CNAME` holds `kantan.sh`, which is what GitHub Pages reads; any other static
-host wants the same name set in its own dashboard and will ignore the file.
+`public/CNAME` holds `kantan.sh`, which is what GitHub Pages reads; Vercel and
+every other host wants the same name set in its own dashboard and ignores the
+file.
 
 The page declares `kantan.sh` as its canonical url, so a Pages or preview host
 serving the same bytes does not compete with it in a search index. The social

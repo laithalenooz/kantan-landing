@@ -15,7 +15,7 @@
 
 import { join, normalize } from "node:path"
 
-const ROOT = import.meta.dir
+const ROOT = join(import.meta.dir, "public")
 const PORT = Number(process.env["KANTAN_LANDING_PORT"] ?? 4173)
 
 const TYPES: Readonly<Record<string, string>> = {
@@ -26,6 +26,12 @@ const TYPES: Readonly<Record<string, string>> = {
   ".svg": "image/svg+xml",
   ".woff2": "font/woff2",
   ".json": "application/json; charset=utf-8",
+  /* `text/plain`, not a download. The install script's whole defence is that
+     you can read it before you pipe it into a shell, and a browser offered
+     `application/octet-stream` saves the file instead of showing it. curl
+     never looks at this header either way. */
+  ".sh": "text/plain; charset=utf-8",
+  "": "text/plain; charset=utf-8",
 }
 
 const server = Bun.serve({
@@ -42,12 +48,22 @@ const server = Bun.serve({
       return new Response(null, { status: 302, headers: { Location: "/index.html" } })
     }
     const rel = normalize(decodeURIComponent(url.pathname)).replace(/^(\.\.[/\\])+/, "")
-    const file = Bun.file(join(ROOT, rel))
+    /* A directory is not a file, and `Bun.file` on one does not exist - so a
+       bare `/` or `/assets/` 404'd here while Vercel, which resolves an index
+       itself, served it. A preview that disagrees with the deploy is worse
+       than no preview.
+
+       The content type then comes from the **resolved** path and not from the
+       request: `/` has no extension, so deriving it from the url served the
+       page as `application/octet-stream` and the browser offered to download
+       the site. */
+    const served = rel.endsWith("/") ? join(rel, "index.html") : rel
+    const file = Bun.file(join(ROOT, served))
     if (!(await file.exists())) return new Response("not found", { status: 404 })
-    const dot = rel.lastIndexOf(".")
+    const dot = served.lastIndexOf(".")
     return new Response(file, {
       headers: {
-        "Content-Type": TYPES[rel.slice(dot)] ?? "application/octet-stream",
+        "Content-Type": TYPES[served.slice(dot)] ?? "application/octet-stream",
         "Cache-Control": "no-store",
       },
     })
