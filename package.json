@@ -1,0 +1,11 @@
+{
+  "name": "kantan-landing",
+  "private": true,
+  "type": "module",
+  "description": "The landing page for kantan, generated from its design canvas artboard.",
+  "scripts": {
+    "build": "bun run build.ts",
+    "serve": "bun run serve.ts",
+    "dev": "bun run build.ts && bun run serve.ts"
+  }
+}

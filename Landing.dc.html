@@ -1,0 +1,573 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>kantan — approve the plan, leave the room</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700;800&amp;family=Geist+Mono:wght@400;500;600&amp;family=Noto+Sans+JP:wght@700;900&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#f4f4f6}
+html{scroll-behavior:smooth}
+.m{font-family:'Geist Mono',ui-monospace,SFMono-Regular,Menlo,monospace}
+.jp{font-family:'Noto Sans JP','Hiragino Sans','Yu Gothic',sans-serif}
+.ic{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex:none}
+button,input,textarea{font:inherit}
+button{cursor:pointer}
+@property --a{syntax:'<angle>';initial-value:0deg;inherits:false}
+@property --n{syntax:'<integer>';initial-value:0;inherits:false}
+@keyframes kbeam{to{--a:360deg}}
+@keyframes kfade{from{opacity:0;transform:translateY(28px);filter:blur(8px)}to{opacity:1;transform:none;filter:blur(0)}}
+@keyframes kpop{from{opacity:0;transform:translateY(10px) scale(.97)}to{opacity:1;transform:none}}
+@keyframes ktilt{from{transform:perspective(1800px) rotateX(24deg) scale(.9) translateY(40px)}to{transform:none}}
+@keyframes kstrike{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+@keyframes kmarq{to{transform:translateX(-50%)}}
+@keyframes kpulse{0%{box-shadow:0 0 0 0 rgba(255,106,26,.55)}70%{box-shadow:0 0 0 10px rgba(255,106,26,0)}100%{box-shadow:0 0 0 0 rgba(255,106,26,0)}}
+@keyframes kspin{to{transform:rotate(360deg)}}
+@keyframes kfloat{0%,100%{translate:0 0}50%{translate:0 -10px}}
+@keyframes kdraw{from{stroke-dashoffset:600}to{stroke-dashoffset:0}}
+@keyframes kcount{from{--n:0}}
+@keyframes kblink{50%{opacity:0}}
+@keyframes kwiggle{0%,100%{rotate:-3deg}50%{rotate:3deg}}
+.rv{animation:kfade .9s cubic-bezier(.2,.7,.2,1) both}
+.tilt{animation:ktilt 1.2s cubic-bezier(.2,.7,.2,1) both}
+.strike{position:relative;display:inline-block}
+.strike::after{content:'';position:absolute;left:-4px;right:-4px;top:54%;height:.13em;border-radius:99px;background:#ff6a1a;transform-origin:left center;animation:kstrike .9s .3s cubic-bezier(.2,.7,.2,1) both}
+.cnt{counter-reset:n var(--n);animation:kcount 2.2s cubic-bezier(.2,.7,.2,1) both}
+.cnt::after{content:counter(n)}
+@supports (animation-timeline: view()){
+  .rv{animation:kfade linear both;animation-timeline:view();animation-range:entry 0% cover 28%}
+  .tilt{animation:ktilt linear both;animation-timeline:view();animation-range:entry 10% cover 48%}
+  .strike::after{animation:kstrike linear both;animation-timeline:view();animation-range:entry 30% cover 45%}
+  .cnt{animation:kcount linear both;animation-timeline:view();animation-range:entry 20% cover 45%}
+}
+.beam{background:conic-gradient(from var(--a),transparent 0deg 200deg,#ffd2b3 270deg,#ff6a1a 330deg,transparent 360deg),linear-gradient(#e8e3de,#e8e3de);animation:kbeam 5s linear infinite}
+.marq{animation:kmarq 26s linear infinite}
+.pulse{animation:kpulse 1.8s ease-out infinite}
+.spin{animation:kspin .9s linear infinite;transform-origin:50% 50%}
+.float{animation:kfloat 6s ease-in-out infinite}
+.float2{animation:kfloat 7s 1.2s ease-in-out infinite}
+.wig{animation:kwiggle 2.8s ease-in-out infinite}
+.scrib{stroke-dasharray:600;animation:kdraw 1.4s .6s cubic-bezier(.6,.1,.2,1) both}
+.caret{animation:kblink 1s steps(1) infinite}
+.pop{animation:kpop .45s cubic-bezier(.2,.7,.2,1) both}
+.cta:hover{background:#2a2b31;transform:translateY(-1px)}
+.ghost:hover{background:#fff}
+.nav a{color:#4a4e59;text-decoration:none}
+.nav a:hover{color:#111216}
+.stage:hover{transform:translateY(-2px)}
+.flip{perspective:1200px}
+.face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;border-radius:22px;box-sizing:border-box;padding:24px;display:flex;flex-direction:column}
+.dots{background-image:radial-gradient(#d3d4db 1px,transparent 1px);background-size:22px 22px}
+input[type=range]{accent-color:#ff6a1a}
+@media (prefers-reduced-motion:reduce){.kr *,.kr *::after{animation:none!important;transition:none!important}}
+a{color:#4b4bc8}a:hover{color:#3a3aa8}
+</style>
+</helmet>
+<div class="kr" style="font-family:'Geist',ui-sans-serif,system-ui,-apple-system,'Segoe UI',sans-serif;color:#111216;background:#f4f4f6;-webkit-font-smoothing:antialiased;overflow-x:clip">
+
+<header class="nav" style="position:sticky;top:0;z-index:50;display:flex;flex-wrap:wrap;align-items:center;gap:10px 22px;padding:12px clamp(16px,4vw,48px);background:rgba(244,244,246,.82);backdrop-filter:saturate(1.4) blur(14px);-webkit-backdrop-filter:saturate(1.4) blur(14px);border-bottom:1px solid rgba(17,18,22,.06)">
+  <a href="#top" style="display:flex;align-items:center;gap:10px;color:#111216">
+    <span aria-hidden="true" style="width:28px;height:28px;border-radius:9px;background:linear-gradient(145deg,#2a2b31,#0e0f12);display:grid;place-items:center;box-shadow:inset 0 1px 0 rgba(255,255,255,.14),0 3px 8px -3px rgba(17,18,22,.6)"><span class="pulse" style="width:9px;height:9px;border-radius:50%;background:#ff6a1a"></span></span>
+    <span style="font-size:18px;font-weight:700;letter-spacing:-.03em">kantan</span>
+  </a>
+  <nav aria-label="Sections" style="display:flex;flex-wrap:wrap;gap:4px 18px;font-size:14px;font-weight:520">
+    <a href="#problem">The problem</a><a href="#how">How it works</a><a href="#try">Try the gate</a><a href="#not">What it isn't</a><a href="#notes">Field notes</a><a href="#status">Status</a>
+  </nav>
+  <a href="{{repoUrl}}" class="cta" style="margin-left:auto;display:inline-flex;align-items:center;gap:8px;height:38px;padding:0 16px 0 13px;border-radius:999px;background:#111216;color:#fff;font-size:14px;font-weight:600;text-decoration:none;transition:transform .2s,background .2s"><svg aria-hidden="true" viewBox="0 0 24 24" style="width:16px;height:16px;fill:#fff"><path d="M12 .5a11.5 11.5 0 0 0-3.64 22.41c.58.1.79-.25.79-.56v-2c-3.2.7-3.88-1.54-3.88-1.54-.52-1.33-1.28-1.69-1.28-1.69-1.05-.72.08-.7.08-.7 1.16.08 1.77 1.19 1.77 1.19 1.03 1.77 2.7 1.26 3.36.96.1-.75.4-1.26.73-1.55-2.56-.29-5.25-1.28-5.25-5.69 0-1.26.45-2.29 1.19-3.1-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.17 1.18a11 11 0 0 1 5.77 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.76.11 3.05.74.81 1.19 1.84 1.19 3.1 0 4.42-2.7 5.39-5.27 5.68.41.36.78 1.06.78 2.14v3.17c0 .31.21.67.8.56A11.5 11.5 0 0 0 12 .5Z"></path></svg>Source</a>
+</header>
+
+<section id="top" style="position:relative;padding:clamp(56px,9vw,120px) clamp(16px,4vw,48px) 0;text-align:center">
+  <div class="dots" aria-hidden="true" style="position:absolute;inset:0;pointer-events:none;-webkit-mask-image:radial-gradient(ellipse 70% 55% at 50% 30%,#000 10%,transparent 70%);mask-image:radial-gradient(ellipse 70% 55% at 50% 30%,#000 10%,transparent 70%)"></div>
+  <span class="jp" aria-hidden="true" style="position:absolute;left:50%;top:clamp(20px,4vw,60px);transform:translateX(-50%);font-size:clamp(160px,30vw,440px);line-height:1;font-weight:900;color:rgba(17,18,22,.035);letter-spacing:-.05em;white-space:nowrap;pointer-events:none">簡単</span>
+  <div style="position:relative;max-width:1100px;margin:0 auto">
+    <div class="pop" style="display:inline-flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:8px;padding:6px 14px 6px 6px;border-radius:999px;background:#fff;border:1px solid #e7e7eb;box-shadow:0 1px 2px rgba(17,18,22,.05);font-size:13.5px;color:#3a3d45">
+      <span class="jp" lang="ja" style="padding:3px 9px;border-radius:999px;background:#111216;color:#fff;font-size:12.5px">簡単</span>
+      <span><strong style="font-weight:620">kantan</strong> · simple, brief · open source · runs on 127.0.0.1</span>
+    </div>
+    <h1 style="margin:28px 0 0;font-size:clamp(50px,9.2vw,132px);line-height:.92;font-weight:800;letter-spacing:-.055em;text-wrap:balance">
+      <span class="pop" style="display:block;animation-delay:.1s">Approve the plan.</span>
+      <span class="pop" style="position:relative;display:inline-block;animation-delay:.25s;color:#ff6a1a">Leave the room.
+        <svg aria-hidden="true" viewBox="0 0 600 40" preserveAspectRatio="none" style="position:absolute;left:2%;right:0;bottom:-.12em;width:96%;height:.28em;overflow:visible"><path class="scrib" d="M4 28 C 120 6, 260 34, 380 16 S 560 10, 596 22" fill="none" stroke="#111216" stroke-width="6" stroke-linecap="round"></path></svg>
+      </span>
+    </h1>
+    <p class="pop" style="margin:34px auto 0;max-width:46ch;font-size:clamp(17px,1.6vw,20px);line-height:1.55;color:#4a4e59;text-wrap:pretty;animation-delay:.4s">kantan drives the real <span class="m" style="font-size:.9em;color:#111216">claude</span> CLI through one coding task at a time. It writes a plan, waits for your OK, then implements it and runs <em style="font-style:normal;color:#111216;font-weight:600">your</em> tests until the exit code says they pass.</p>
+
+    <div class="pop" style="margin:34px auto 0;max-width:520px;text-align:left;border-radius:20px;background:#111216;color:#f4f4f6;box-shadow:0 30px 70px -30px rgba(17,18,22,.7),inset 0 1px 0 rgba(255,255,255,.08);overflow:hidden;animation-delay:.55s">
+      <div style="display:flex;align-items:center;gap:8px;padding:12px 14px 0 18px">
+        <span class="m" style="font-size:12px;color:#8a8f9c">three lines, honestly</span>
+        <button onClick="{{copy}}" style="margin-left:auto;height:30px;padding:0 12px;border-radius:999px;border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.06);color:#f4f4f6;font-size:12.5px;font-weight:560;display:inline-flex;align-items:center;gap:6px"><svg class="ic" aria-hidden="true" viewBox="0 0 24 24" style="width:13px;height:13px"><rect width="14" height="14" x="8" y="8" rx="2"></rect><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path></svg>{{copyLabel}}</button>
+      </div>
+      <pre class="m" style="margin:0;padding:12px 18px 18px;font-size:14.5px;line-height:1.9;overflow-x:auto"><span style="color:#ff8a4c">$</span> bun install
+<span style="color:#ff8a4c">$</span> bun run build   <span style="color:#6b7080"># needs Node, for Vite</span>
+<span style="color:#ff8a4c">$</span> bun run server  <span style="color:#6b7080"># 127.0.0.1:3100</span><span class="caret" style="display:inline-block;width:.6em;height:1.1em;margin-left:4px;vertical-align:-3px;background:#ff6a1a"></span></pre>
+    </div>
+  </div>
+
+  <div style="position:relative;max-width:1180px;margin:clamp(56px,7vw,96px) auto 0">
+    <div class="float" aria-hidden="true" style="position:absolute;z-index:3;left:-1%;top:28%;padding:10px 14px;border-radius:14px;background:#fff;border:1px solid #e7e7eb;box-shadow:0 18px 40px -20px rgba(17,18,22,.45);font-size:14px;font-weight:600;rotate:-4deg;text-align:left">Your tests decide.<br><span class="m" style="font-size:12.5px;color:#0f7a54">exit 0</span> <span style="font-weight:450;color:#5f6370">not "looks good to me"</span></div>
+    <div class="float2" aria-hidden="true" style="position:absolute;z-index:3;right:-1%;top:62%;padding:10px 14px;border-radius:14px;background:#ff6a1a;color:#1a0b02;box-shadow:0 18px 40px -16px rgba(255,106,26,.7);font-size:15px;font-weight:700;rotate:3deg">You decide here →</div>
+    <div class="float" aria-hidden="true" style="position:absolute;z-index:3;right:6%;top:-22px;padding:8px 13px;border-radius:999px;background:#111216;color:#fff;font-size:13px;font-weight:600;rotate:2deg;animation-delay:2s">one process · one port · no service</div>
+    <figure class="tilt" style="margin:0;border-radius:22px;background:#fff;border:1px solid #dcdce2;box-shadow:0 2px 4px rgba(17,18,22,.04),0 60px 120px -50px rgba(17,18,22,.5),0 40px 80px -60px rgba(255,106,26,.6);overflow:hidden;transform-origin:50% 100%">
+      <div style="display:flex;align-items:center;gap:8px;padding:12px 16px;border-bottom:1px solid #eeeef1;background:#fafafb">
+        <span style="width:11px;height:11px;border-radius:50%;background:#e4e4e9"></span><span style="width:11px;height:11px;border-radius:50%;background:#e4e4e9"></span><span style="width:11px;height:11px;border-radius:50%;background:#e4e4e9"></span>
+        <span class="m" style="margin:0 auto;padding:4px 14px;border-radius:999px;background:#f0f0f3;font-size:12px;color:#5f6370">127.0.0.1:3100</span>
+      </div>
+      <img src="/_blob/383e503ba418683836988c68b530b70d" alt="The kantan approval gate: an orange 'Needs you' band, the question 'Is this plan right?', the rendered plan, and the Approve plan button" style="display:block;width:100%;height:auto">
+      <figcaption style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)">The gate, as shipped. Not a mockup.</figcaption>
+    </figure>
+    <p class="m" style="margin:16px 0 0;font-size:12.5px;color:#5f6370">↑ the actual app, booted against real repos. Not a mockup.</p>
+  </div>
+</section>
+
+<div aria-hidden="true" style="margin-top:clamp(64px,8vw,110px);background:#ff6a1a;color:#1a0b02;overflow:hidden;rotate:-1.5deg;scale:1.04;box-shadow:0 10px 30px -14px rgba(255,106,26,.8)">
+  <div class="marq" style="display:flex;width:max-content;padding:16px 0;font-size:clamp(20px,2.4vw,30px);font-weight:800;letter-spacing:-.02em;white-space:nowrap">
+    <span style="display:flex;gap:28px;padding-right:28px"><span>NEEDS YOU</span><span>●</span><span>PLAN READY</span><span>●</span><span>exit 0</span><span>●</span><span>ONE TASK AT A TIME</span><span>●</span><span>RESUMABLE. STOPPING COSTS NOTHING.</span><span>●</span><span>NEEDS YOU</span><span>●</span><span>PLAN READY</span><span>●</span><span>exit 0</span><span>●</span><span>ONE TASK AT A TIME</span><span>●</span><span>RESUMABLE. STOPPING COSTS NOTHING.</span><span>●</span></span>
+    <span style="display:flex;gap:28px;padding-right:28px"><span>NEEDS YOU</span><span>●</span><span>PLAN READY</span><span>●</span><span>exit 0</span><span>●</span><span>ONE TASK AT A TIME</span><span>●</span><span>RESUMABLE. STOPPING COSTS NOTHING.</span><span>●</span><span>NEEDS YOU</span><span>●</span><span>PLAN READY</span><span>●</span><span>exit 0</span><span>●</span><span>ONE TASK AT A TIME</span><span>●</span><span>RESUMABLE. STOPPING COSTS NOTHING.</span><span>●</span></span>
+  </div>
+</div>
+
+<section id="problem" style="padding:clamp(80px,10vw,150px) clamp(16px,4vw,48px) 40px">
+  <div style="max-width:1180px;margin:0 auto">
+    <div class="rv m" style="font-size:13px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:#ff6a1a">Chapter 1 · the problem</div>
+    <h2 class="rv" style="margin:14px 0 0;max-width:18ch;font-size:clamp(36px,5.4vw,76px);line-height:1;font-weight:800;letter-spacing:-.045em;text-wrap:balance">Agents write good code. Then they mark their own homework.</h2>
+    <p class="rv" style="margin:22px 0 0;max-width:56ch;font-size:18px;line-height:1.6;color:#4a4e59">You trust Claude to write the code. Trusting it to decide it's <em>finished</em> is a different thing. Drag the slider and see how much the agent's confidence changes the result.</p>
+
+    <div class="rv" style="margin-top:44px;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(380px,100%),1fr));gap:20px">
+      <div style="border-radius:26px;background:#fff;border:1px solid #e7e7eb;padding:28px;box-shadow:0 1px 2px rgba(17,18,22,.04),0 30px 60px -40px rgba(17,18,22,.35)">
+        <div style="display:flex;align-items:center;gap:10px">
+          <span aria-hidden="true" class="wig" style="width:38px;height:38px;border-radius:12px;background:#ececfb;display:grid;place-items:center;color:#4b4bc8"><svg class="ic" viewBox="0 0 24 24" style="width:20px;height:20px"><rect x="4" y="7" width="16" height="12" rx="4"></rect><path d="M12 3v4"></path><circle cx="9" cy="13" r="1.2" fill="currentColor"></circle><circle cx="15" cy="13" r="1.2" fill="currentColor"></circle></svg></span>
+          <span style="font-size:15px;font-weight:620">The agent, reporting back</span>
+        </div>
+        <div style="margin-top:18px;padding:18px 20px;border-radius:6px 22px 22px 22px;background:#f3f3fe;border:1px solid #e2e3fb;font-size:clamp(19px,2vw,23px);line-height:1.35;font-weight:600;color:#17174a">All tests pass! I'm <span style="font-variant-numeric:tabular-nums;color:#4b4bc8">{{conf}}%</span> sure the importer is done.</div>
+        <label for="conf" style="display:block;margin-top:24px;font-size:13.5px;font-weight:600;color:#3a3d45">How sure is the agent?</label>
+        <input id="conf" type="range" min="0" max="100" value="{{conf}}" onChange="{{onConf}}" style="width:100%;margin-top:10px">
+        <div style="display:flex;justify-content:space-between;font-size:12px;color:#6b7080"><span>not at all</span><span>extremely</span></div>
+      </div>
+      <div style="border-radius:26px;background:#111216;color:#f4f4f6;padding:28px;box-shadow:0 30px 60px -36px rgba(17,18,22,.8);display:flex;flex-direction:column">
+        <div style="display:flex;align-items:center;gap:10px">
+          <span aria-hidden="true" style="width:38px;height:38px;border-radius:12px;background:rgba(255,255,255,.08);display:grid;place-items:center"><svg class="ic" viewBox="0 0 24 24" style="width:19px;height:19px"><polyline points="4 17 10 11 4 5"></polyline><line x1="12" x2="20" y1="19" y2="19"></line></svg></span>
+          <span style="font-size:15px;font-weight:620">What kantan does instead</span>
+        </div>
+        <pre class="m" style="margin:18px 0 0;font-size:14px;line-height:1.85;color:#c9cad3;white-space:pre-wrap"><span style="color:#ff8a4c">$</span> npm test
+  <span style="color:#7ad3a8">✓</span> parses the manifest
+  <span style="color:#7ad3a8">✓</span> maps known fields
+  <span style="color:#ff7b86">✕</span> warns once per dropped field
+<span style="color:#8a8f9c">9 passing, 1 failing</span></pre>
+        <div style="margin-top:auto;padding-top:20px;display:flex;flex-wrap:wrap;align-items:baseline;gap:8px 16px">
+          <span class="m" style="font-size:clamp(46px,6vw,72px);line-height:1;font-weight:600;color:#ff7b86;letter-spacing:-.03em">exit 1</span>
+          <span style="font-size:16px;font-weight:560;color:#f4f4f6">{{quip}}</span>
+        </div>
+      </div>
+    </div>
+    <p class="rv" style="margin:36px 0 0;max-width:60ch;font-size:clamp(20px,2.2vw,26px);line-height:1.4;font-weight:600;letter-spacing:-.015em">The server runs your tests, not the agent. It branches on the exit code and never on the agent reporting success. <span style="color:#ff6a1a">You can't talk an exit code into anything.</span></p>
+  </div>
+</section>
+
+<section id="how" style="padding:clamp(80px,10vw,140px) clamp(16px,4vw,48px) 40px">
+  <div style="max-width:1180px;margin:0 auto">
+    <div class="rv m" style="font-size:13px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:#ff6a1a">Chapter 2 · how it works</div>
+    <h2 class="rv" style="margin:14px 0 0;max-width:20ch;font-size:clamp(36px,5.4vw,76px);line-height:1;font-weight:800;letter-spacing:-.045em;text-wrap:balance">Five stages. You're in exactly one of them.</h2>
+    <p class="rv" style="margin:22px 0 0;max-width:56ch;font-size:18px;line-height:1.6;color:#4a4e59">One human decision, at the point where a decision is cheapest: before any code exists. Tap a stage.</p>
+
+    <div class="rv" role="tablist" aria-label="Stages" style="margin-top:40px;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(170px,100%),1fr));gap:12px;position:relative">
+      <sc-for list="{{stages}}" as="s" hint-placeholder-count="5">
+        <button role="tab" aria-selected="{{s.on}}" onClick="{{s.pick}}" class="stage" style="position:relative;text-align:left;padding:18px 18px 16px;border-radius:20px;transition:transform .25s,box-shadow .25s,background .25s;{{s.style}}">
+          <span class="m" style="display:block;font-size:12px;opacity:.75">{{s.n}}</span>
+          <span style="display:block;margin-top:6px;font-size:22px;font-weight:700;letter-spacing:-.025em">{{s.name}}</span>
+          <span style="display:block;margin-top:4px;font-size:13px;opacity:.85">{{s.who}}</span>
+        </button>
+      </sc-for>
+    </div>
+    <div class="pop" key="{{stageKey}}" role="tabpanel" style="margin-top:14px;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(320px,100%),1fr));gap:24px;align-items:center;padding:clamp(22px,3vw,36px);border-radius:26px;background:#fff;border:1px solid #e7e7eb;box-shadow:0 30px 60px -44px rgba(17,18,22,.4)">
+      <div>
+        <h3 style="margin:0;font-size:clamp(26px,3vw,36px);line-height:1.1;font-weight:750;letter-spacing:-.035em">{{stageTitle}}</h3>
+        <p style="margin:12px 0 0;font-size:17px;line-height:1.6;color:#3a3d45">{{stageBody}}</p>
+      </div>
+      <div class="m" style="padding:18px 20px;border-radius:18px;background:#f4f4f6;border:1px solid #eeeef1;font-size:13.5px;line-height:1.8;color:#3a3d45;white-space:pre-wrap;overflow-wrap:anywhere">{{stageCode}}</div>
+    </div>
+
+    <div class="rv" style="margin-top:56px">
+      <h3 style="margin:0;font-size:22px;font-weight:700;letter-spacing:-.02em">Four nouns. Three are already on your disk.</h3>
+      <div style="margin-top:18px;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(240px,100%),1fr));gap:12px">
+        <div style="padding:20px;border-radius:20px;background:#fff;border:1px solid #e7e7eb"><div style="font-size:12px;font-weight:600;color:#0f7a54">already yours</div><div style="margin-top:6px;font-size:22px;font-weight:700;letter-spacing:-.02em">Project</div><div class="m" style="margin-top:6px;font-size:13px;color:#4a4e59">a git repo</div></div>
+        <div style="padding:20px;border-radius:20px;background:#fff;border:1px solid #e7e7eb"><div style="font-size:12px;font-weight:600;color:#0f7a54">already yours</div><div style="margin-top:6px;font-size:22px;font-weight:700;letter-spacing:-.02em">Feature</div><div class="m" style="margin-top:6px;font-size:13px;color:#4a4e59">docs/features/*.md</div></div>
+        <div style="padding:20px;border-radius:20px;background:#fff;border:1px solid #e7e7eb"><div style="font-size:12px;font-weight:600;color:#0f7a54">already yours</div><div style="margin-top:6px;font-size:22px;font-weight:700;letter-spacing:-.02em">Task</div><div class="m" style="margin-top:6px;font-size:13px;color:#4a4e59">a "- [ ]" line</div></div>
+        <div style="padding:20px;border-radius:20px;background:#111216;color:#fff"><div style="font-size:12px;font-weight:600;color:#ff8a4c">what kantan adds</div><div style="margin-top:6px;font-size:22px;font-weight:700;letter-spacing:-.02em">Run</div><div class="m" style="margin-top:6px;font-size:13px;color:#c9cad3">plan → gate → code → exit code</div></div>
+      </div>
+      <p style="margin:16px 0 0;font-size:15px;color:#4a4e59">Your backlog is markdown in your own repo, in your own git history. kantan renders it and drives it. It never owns it.</p>
+    </div>
+  </div>
+</section>
+
+<section id="try" style="padding:clamp(80px,10vw,140px) clamp(16px,4vw,48px) 40px">
+  <div style="max-width:1180px;margin:0 auto">
+    <div class="rv m" style="font-size:13px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:#ff6a1a">Chapter 3 · try it</div>
+    <h2 class="rv" style="margin:14px 0 0;max-width:18ch;font-size:clamp(36px,5.4vw,76px);line-height:1;font-weight:800;letter-spacing:-.045em;text-wrap:balance">Go on. Approve it and go get a coffee.</h2>
+    <p class="rv" style="margin:22px 0 0;max-width:56ch;font-size:18px;line-height:1.6;color:#4a4e59">A tiny re-enactment of a real run, sped up. Approve the plan, or send it back with a note first, the way you'd reply to a teammate's draft.</p>
+
+    <div class="rv" style="margin-top:40px;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(440px,100%),1fr));gap:20px;align-items:start">
+
+      <div class="{{gateBeam}}" style="padding:1.5px;border-radius:26px;box-shadow:0 40px 80px -50px rgba(255,106,26,.6)">
+        <div style="border-radius:24.5px;background:#fff;overflow:hidden">
+          <div style="padding:24px 26px 18px;background:linear-gradient(180deg,#fff8f3,#fff)">
+            <div style="display:flex;align-items:center;gap:8px;font-size:13px;font-weight:620;color:{{gateEyebrowColor}}">
+              <sc-if value="{{atGate}}" hint-placeholder-val="{{ true }}"><span class="pulse" aria-hidden="true" style="width:9px;height:9px;border-radius:50%;background:#ff6a1a"></span></sc-if>
+              {{gateEyebrow}}
+            </div>
+            <div style="margin-top:10px;font-size:clamp(28px,3vw,38px);line-height:1.05;font-weight:780;letter-spacing:-.04em">Is this plan right?</div>
+            <div class="m" style="margin-top:10px;font-size:12px;color:#5f6370">your-app · T2 Map records to rows · {{planVersion}}</div>
+          </div>
+          <ol style="margin:0;padding:6px 26px 4px;list-style:none;display:flex;flex-direction:column;gap:10px;font-size:15px;line-height:1.5">
+            <li style="display:grid;grid-template-columns:26px minmax(0,1fr);gap:10px"><span style="width:24px;height:24px;border-radius:50%;background:#111216;color:#fff;display:grid;place-items:center;font-size:12px;font-weight:650">1</span><span>Add <span class="m" style="font-size:13px">mapRecord()</span> in <span class="m" style="font-size:13px">src/importer/map.ts</span></span></li>
+            <li style="display:grid;grid-template-columns:26px minmax(0,1fr);gap:10px;{{line2Style}}"><span style="width:24px;height:24px;border-radius:50%;background:#111216;color:#fff;display:grid;place-items:center;font-size:12px;font-weight:650">2</span><span>{{line2}}</span></li>
+            <li style="display:grid;grid-template-columns:26px minmax(0,1fr);gap:10px"><span style="width:24px;height:24px;border-radius:50%;background:#111216;color:#fff;display:grid;place-items:center;font-size:12px;font-weight:650">3</span><span>Test the 2024-Q3 fixture, then run <span class="m" style="font-size:13px">npm test</span></span></li>
+          </ol>
+
+          <div style="margin-top:16px;padding:18px 26px 22px;border-top:1px solid #eeeef1;background:#fbfbfc">
+            <sc-if value="{{atGate}}" hint-placeholder-val="{{ true }}">
+              <div style="display:flex;flex-wrap:wrap;gap:10px;align-items:center">
+                <button onClick="{{approve}}" class="cta" style="height:52px;padding:0 22px 0 18px;border-radius:999px;border:0;background:#111216;color:#fff;font-size:16px;font-weight:650;display:inline-flex;align-items:center;gap:10px;box-shadow:0 12px 26px -12px rgba(17,18,22,.7);transition:transform .2s,background .2s"><svg class="ic" aria-hidden="true" viewBox="0 0 24 24" style="width:18px;height:18px;stroke-width:2.6"><path d="M20 6 9 17l-5-5"></path></svg>Approve plan<span class="m" style="padding:2px 7px;border-radius:7px;background:rgba(255,255,255,.14);font-size:11.5px">⌘↵</span></button>
+                <button onClick="{{openReply}}" class="ghost" style="height:48px;padding:0 18px;border-radius:999px;border:1px solid #d9d9df;background:#fafafb;color:#1e2026;font-size:14.5px;font-weight:580;display:inline-flex;align-items:center;gap:8px"><svg class="ic" aria-hidden="true" viewBox="0 0 24 24" style="width:15px;height:15px"><polyline points="9 14 4 9 9 4"></polyline><path d="M20 20v-7a4 4 0 0 0-4-4H4"></path></svg>Send back</button>
+              </div>
+            </sc-if>
+            <sc-if value="{{replying}}" hint-placeholder-val="{{ false }}">
+              <div class="pop">
+                <label for="note" style="display:block;font-size:13px;font-weight:620;color:#2a2c33">Reply to the draft</label>
+                <textarea id="note" rows="2" value="{{note}}" onChange="{{onNote}}" style="display:block;width:100%;box-sizing:border-box;margin-top:8px;padding:12px 14px;border:0;border-radius:14px;background:#efeff2;font-size:14.5px;line-height:1.5;color:#111216;resize:vertical;outline:none"></textarea>
+                <div style="display:flex;gap:8px;margin-top:10px">
+                  <button onClick="{{sendBack}}" class="cta" style="height:44px;padding:0 18px;border-radius:999px;border:0;background:#111216;color:#fff;font-size:14px;font-weight:620;transition:transform .2s,background .2s">Send back</button>
+                  <button onClick="{{reset}}" class="ghost" style="height:44px;padding:0 16px;border-radius:999px;border:1px solid #d9d9df;background:#fafafb;font-size:14px;font-weight:560;color:#1e2026">Never mind</button>
+                </div>
+              </div>
+            </sc-if>
+            <sc-if value="{{revising}}" hint-placeholder-val="{{ false }}">
+              <div class="pop" role="status" style="display:flex;align-items:center;gap:10px;min-height:52px;font-size:15px;font-weight:600;color:#20205e"><svg class="spin" aria-hidden="true" viewBox="0 0 24 24" style="width:18px;height:18px"><circle cx="12" cy="12" r="9" fill="none" stroke="#dcdcf6" stroke-width="3"></circle><path d="M21 12a9 9 0 0 0-9-9" fill="none" stroke="#5b5bd6" stroke-width="3" stroke-linecap="round"></path></svg>Same planning session, revising with your words…</div>
+            </sc-if>
+            <sc-if value="{{busy}}" hint-placeholder-val="{{ false }}">
+              <div class="pop" style="display:flex;flex-wrap:wrap;align-items:center;gap:10px;min-height:52px">
+                <span style="font-size:15px;font-weight:600">{{busyText}}</span>
+                <button onClick="{{reset}}" class="ghost" style="margin-left:auto;height:40px;padding:0 16px;border-radius:999px;border:1px solid #d9d9df;background:#fafafb;font-size:13.5px;font-weight:580;color:#1e2026">Play again</button>
+              </div>
+            </sc-if>
+          </div>
+        </div>
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:14px">
+        <div aria-label="{{roomCaption}}" role="img" style="position:relative;height:210px;border-radius:26px;background:linear-gradient(180deg,#fafafb 0%,#fafafb 72%,#ececf0 72%);border:1px solid #e7e7eb;overflow:hidden">
+          <div aria-hidden="true" style="position:absolute;right:7%;bottom:28%;width:62px;height:118px;border-radius:8px 8px 0 0;background:#e4e4e9;border:2px solid #d3d4db;box-sizing:border-box"><span style="position:absolute;left:9px;top:56px;width:7px;height:7px;border-radius:50%;background:#a3a7b1"></span></div>
+          <div aria-hidden="true" style="position:absolute;left:8%;bottom:28%;width:140px;height:10px;border-radius:4px;background:#26272d"></div>
+          <div aria-hidden="true" style="position:absolute;left:8%;bottom:28%;margin-bottom:10px;width:84px;height:54px;border-radius:7px;background:#111216;margin-left:28px;display:grid;place-items:center">
+            <sc-if value="{{scrGate}}" hint-placeholder-val="{{ true }}"><span class="pulse" style="width:12px;height:12px;border-radius:50%;background:#ff6a1a"></span></sc-if>
+            <sc-if value="{{scrRun}}" hint-placeholder-val="{{ false }}"><svg class="spin" viewBox="0 0 24 24" style="width:18px;height:18px"><circle cx="12" cy="12" r="9" fill="none" stroke="#3a3d45" stroke-width="3"></circle><path d="M21 12a9 9 0 0 0-9-9" fill="none" stroke="#8b8bef" stroke-width="3" stroke-linecap="round"></path></svg></sc-if>
+            <sc-if value="{{scrDone}}" hint-placeholder-val="{{ false }}"><span style="width:20px;height:20px;border-radius:50%;background:#0f8a5f;display:grid;place-items:center"><svg viewBox="0 0 24 24" style="width:12px;height:12px;fill:none;stroke:#fff;stroke-width:4;stroke-linecap:round;stroke-linejoin:round"><path d="M20 6 9 17l-5-5"></path></svg></span></sc-if>
+          </div>
+          <div aria-hidden="true" style="position:absolute;bottom:28%;left:{{youLeft}};transition:left 1.6s cubic-bezier(.6,.05,.25,1);display:flex;flex-direction:column;align-items:center">
+            <span style="position:relative;width:34px;height:34px;border-radius:50%;background:#ffd8bf;border:2px solid #111216;box-sizing:border-box">
+              <span style="position:absolute;left:8px;top:12px;width:4px;height:4px;border-radius:50%;background:#111216"></span><span style="position:absolute;right:8px;top:12px;width:4px;height:4px;border-radius:50%;background:#111216"></span>
+              <span style="position:absolute;left:10px;bottom:7px;width:10px;height:4px;border-bottom:2px solid #111216;border-radius:0 0 8px 8px"></span>
+            </span>
+            <span style="width:30px;height:44px;margin-top:-2px;border-radius:12px 12px 4px 4px;background:#5b5bd6"></span>
+            <sc-if value="{{youAway}}" hint-placeholder-val="{{ false }}"><span class="pop" style="position:absolute;right:-22px;top:34px;width:16px;height:18px;border-radius:2px 2px 6px 6px;background:#fff;border:2px solid #111216;box-sizing:border-box"></span></sc-if>
+          </div>
+          <div style="position:absolute;left:16px;top:14px;right:16px;display:flex;align-items:center;gap:10px">
+            <span style="font-size:13.5px;font-weight:620;color:#3a3d45">{{roomCaption}}</span>
+            <span class="m" style="margin-left:auto;padding:4px 10px;border-radius:999px;background:#fff;border:1px solid #e7e7eb;font-size:12px;color:#3a3d45">away {{awayMins}} min</span>
+          </div>
+        </div>
+
+        <div style="border-radius:26px;background:#fff;border:1px solid #e7e7eb;padding:18px 20px;min-height:250px;box-sizing:border-box">
+          <div style="display:flex;align-items:center;gap:8px;font-size:13px;font-weight:620;color:#3a3d45"><svg class="ic" aria-hidden="true" viewBox="0 0 24 24" style="width:15px;height:15px"><polyline points="4 17 10 11 4 5"></polyline><line x1="12" x2="20" y1="19" y2="19"></line></svg>Run record</div>
+          <sc-if value="{{noEvents}}" hint-placeholder-val="{{ true }}">
+            <p style="margin:18px 0 0;font-size:14.5px;line-height:1.55;color:#5f6370">Nothing has happened yet, because nothing moves until you decide. That's the point.</p>
+          </sc-if>
+          <ol style="list-style:none;margin:10px 0 0;padding:0">
+            <sc-for list="{{events}}" as="e" hint-placeholder-count="0">
+              <li class="pop" style="display:grid;grid-template-columns:44px 16px minmax(0,1fr) auto;gap:10px;align-items:center;padding:9px 0;border-top:1px solid #f0f0f3">
+                <span class="m" style="font-size:12px;color:#6b7080">{{e.t}}</span>
+                <span aria-hidden="true" style="width:10px;height:10px;border-radius:50%;{{e.dot}}"></span>
+                <span style="font-size:14.5px"><span class="{{e.cls}}">{{e.text}}</span> <span style="color:#5f6370;font-size:13px">{{e.sub}}</span></span>
+                <sc-if value="{{e.hasChip}}" hint-placeholder-val="{{ false }}"><span class="m" style="padding:3px 9px;border-radius:999px;font-size:12px;font-weight:650;{{e.chipStyle}}">{{e.chip}}</span></sc-if>
+              </li>
+            </sc-for>
+          </ol>
+          <sc-if value="{{done}}" hint-placeholder-val="{{ false }}">
+            <div class="pop" style="margin-top:12px;padding:14px 16px;border-radius:16px;background:#e8f5ef;color:#0b5a3e;font-size:15px;font-weight:620;display:flex;align-items:center;gap:10px"><span style="width:22px;height:22px;border-radius:50%;background:#0f8a5f;display:grid;place-items:center;flex:none"><svg viewBox="0 0 24 24" style="width:12px;height:12px;fill:none;stroke:#fff;stroke-width:4;stroke-linecap:round;stroke-linejoin:round"><path d="M20 6 9 17l-5-5"></path></svg></span>Passed, by exit code. Read by kantan, not the agent.</div>
+          </sc-if>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="honest" style="padding:clamp(80px,10vw,140px) clamp(16px,4vw,48px) 40px">
+  <div style="max-width:1180px;margin:0 auto">
+    <div class="rv m" style="font-size:13px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:#ff6a1a">Chapter 4 · the unusual bit</div>
+    <h2 class="rv" style="margin:14px 0 0;max-width:20ch;font-size:clamp(36px,5.4vw,76px);line-height:1;font-weight:800;letter-spacing:-.045em;text-wrap:balance">No tick it didn't earn.</h2>
+    <p class="rv" style="margin:22px 0 0;max-width:58ch;font-size:18px;line-height:1.6;color:#4a4e59">No screen in kantan claims a verification it didn't observe. Your tests decide, and when there are none it says so. Flip the switch.</p>
+
+    <div class="rv" style="margin-top:40px;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(420px,100%),1fr));gap:20px;align-items:start">
+      <div style="border-radius:26px;background:#fff;border:1px solid #e7e7eb;padding:26px;box-shadow:0 30px 60px -44px rgba(17,18,22,.4)">
+        <button role="switch" aria-checked="{{suite}}" onClick="{{toggleSuite}}" style="display:flex;align-items:center;gap:14px;width:100%;padding:0;border:0;background:transparent;text-align:left;color:#111216">
+          <span aria-hidden="true" style="position:relative;width:56px;height:32px;border-radius:999px;transition:background .25s;flex:none;{{switchBg}}"><span style="position:absolute;top:4px;width:24px;height:24px;border-radius:50%;background:#fff;box-shadow:0 2px 6px rgba(17,18,22,.3);transition:left .25s cubic-bezier(.2,.7,.2,1);left:{{knob}}"></span></span>
+          <span style="font-size:17px;font-weight:650">This project has a test command</span>
+        </button>
+        <div class="pop" key="{{suiteKey}}" style="margin-top:22px;display:grid;grid-template-columns:22px 26px minmax(0,1fr);gap:10px;align-items:center;padding:16px 18px;border-radius:16px;background:#fafafb;border:1px solid #eeeef1">
+          <sc-if value="{{suite}}" hint-placeholder-val="{{ true }}"><span aria-hidden="true" style="width:20px;height:20px;border-radius:50%;background:#0f8a5f;display:grid;place-items:center"><svg viewBox="0 0 24 24" style="width:12px;height:12px;fill:none;stroke:#fff;stroke-width:4;stroke-linecap:round;stroke-linejoin:round"><path d="M20 6 9 17l-5-5"></path></svg></span></sc-if>
+          <sc-if value="{{noSuite}}" hint-placeholder-val="{{ false }}"><span aria-hidden="true" style="width:20px;height:20px;border-radius:50%;border:2px dashed #8a8f9c;box-sizing:border-box"></span></sc-if>
+          <span class="m" style="font-size:13px;color:#6b7080">T2</span>
+          <span style="display:flex;flex-wrap:wrap;align-items:center;gap:8px;font-size:16px;font-weight:600">Map records to rows <span style="font-size:14px;font-weight:620;{{verdictStyle}}">{{verdict}}</span></span>
+        </div>
+        <p class="m" style="margin:12px 2px 0;font-size:13px;color:#4a4e59">verifiedBy: <span style="font-weight:600;color:#111216">{{verifiedBy}}</span></p>
+        <p style="margin:10px 2px 0;font-size:15px;line-height:1.55;color:#3a3d45">{{suiteExplain}}</p>
+        <div style="margin-top:18px;display:grid;grid-template-columns:22px minmax(0,1fr);gap:10px;align-items:start;padding:14px 16px;border-radius:16px;border:1.5px dashed #dcdce2">
+          <span aria-hidden="true" style="width:20px;height:20px;border-radius:50%;border:2px solid #8a8f9c;box-sizing:border-box;display:grid;place-items:center"><svg viewBox="0 0 24 24" style="width:11px;height:11px;fill:none;stroke:#5f6370;stroke-width:3.5;stroke-linecap:round;stroke-linejoin:round"><path d="M20 6 9 17l-5-5"></path></svg></span>
+          <span style="font-size:14.5px;line-height:1.5;color:#3a3d45"><strong style="font-weight:650;color:#111216">Checked off</strong>, in grey with an outline tick: someone ticked the box by hand and kantan never ran it, so it won't call it passed. A log older than the field reads <span class="m" style="font-size:13px">unknown</span>, never as a pass.</span>
+        </div>
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:14px">
+        <div style="border-radius:26px;background:#fff;border:1px solid #e7e7eb;padding:22px 24px">
+          <div style="display:flex;flex-wrap:wrap;align-items:center;gap:10px">
+            <h3 style="margin:0;font-size:18px;font-weight:700;letter-spacing:-.015em">Ten states. Readable with the colour drained.</h3>
+            <button onClick="{{toggleDrain}}" aria-pressed="{{drain}}" class="ghost" style="margin-left:auto;height:36px;padding:0 14px;border-radius:999px;border:1px solid #d9d9df;background:#fafafb;font-size:13px;font-weight:600;color:#1e2026">{{drainLabel}}</button>
+          </div>
+          <div style="margin-top:18px;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:14px 8px;text-align:center;transition:filter .5s;{{drainStyle}}">
+            <div style="display:flex;flex-direction:column;align-items:center;gap:8px"><span style="width:22px;height:22px;border-radius:50%;border:2.5px solid #a3a7b1;box-sizing:border-box"></span><span style="font-size:11.5px;color:#3a3d45">open</span></div>
+            <div style="display:flex;flex-direction:column;align-items:center;gap:8px"><svg class="spin" viewBox="0 0 24 24" style="width:24px;height:24px"><circle cx="12" cy="12" r="9" fill="none" stroke="#dcdcf6" stroke-width="3"></circle><path d="M21 12a9 9 0 0 0-9-9" fill="none" stroke="#5b5bd6" stroke-width="3" stroke-linecap="round"></path></svg><span style="font-size:11.5px;color:#3a3d45">running</span></div>
+            <div style="display:flex;flex-direction:column;align-items:center;gap:8px"><span class="pulse" style="width:22px;height:22px;border-radius:50%;background:#ff6a1a"></span><span style="font-size:11.5px;color:#3a3d45">needs you</span></div>
+            <div style="display:flex;flex-direction:column;align-items:center;gap:8px"><span style="width:24px;height:24px;border-radius:50%;background:#0f8a5f;display:grid;place-items:center"><svg viewBox="0 0 24 24" style="width:13px;height:13px;fill:none;stroke:#fff;stroke-width:3.5;stroke-linecap:round;stroke-linejoin:round"><path d="M20 6 9 17l-5-5"></path></svg></span><span style="font-size:11.5px;color:#3a3d45">passed</span></div>
+            <div style="display:flex;flex-direction:column;align-items:center;gap:8px"><span style="width:24px;height:24px;border-radius:50%;border:2px solid #8a8f9c;box-sizing:border-box;display:grid;place-items:center"><svg viewBox="0 0 24 24" style="width:12px;height:12px;fill:none;stroke:#5f6370;stroke-width:3.5;stroke-linecap:round;stroke-linejoin:round"><path d="M20 6 9 17l-5-5"></path></svg></span><span style="font-size:11.5px;color:#3a3d45">checked off</span></div>
+            <div style="display:flex;flex-direction:column;align-items:center;gap:8px"><span style="width:24px;height:24px;border-radius:50%;background:#d92d3a;display:grid;place-items:center"><svg viewBox="0 0 24 24" style="width:11px;height:11px;fill:none;stroke:#fff;stroke-width:3.5;stroke-linecap:round"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg></span><span style="font-size:11.5px;color:#3a3d45">failed</span></div>
+            <div style="display:flex;flex-direction:column;align-items:center;gap:8px"><span style="width:24px;height:24px;border-radius:50%;border:2.5px dashed #a23b87;box-sizing:border-box;display:grid;place-items:center"><svg viewBox="0 0 24 24" style="width:10px;height:10px;fill:#a23b87"><rect x="5" y="3" width="5" height="18" rx="1.5"></rect><rect x="14" y="3" width="5" height="18" rx="1.5"></rect></svg></span><span style="font-size:11.5px;color:#3a3d45">stalled</span></div>
+            <div style="display:flex;flex-direction:column;align-items:center;gap:8px"><svg class="ic" viewBox="0 0 24 24" style="width:24px;height:24px;color:#0e7c86"><line x1="6" x2="6" y1="3" y2="15"></line><circle cx="18" cy="6" r="3"></circle><circle cx="6" cy="18" r="3"></circle><path d="M18 9a9 9 0 0 1-9 9"></path></svg><span style="font-size:11.5px;color:#3a3d45">unmerged</span></div>
+            <div style="display:flex;flex-direction:column;align-items:center;gap:8px"><svg class="ic" viewBox="0 0 24 24" style="width:24px;height:24px;color:#64748b"><path d="m19 5 3-3"></path><path d="m2 22 3-3"></path><path d="M6.3 20.3a2.4 2.4 0 0 0 3.4 0L12 18l-6-6-2.3 2.3a2.4 2.4 0 0 0 0 3.4Z"></path><path d="M7.5 13.5 10 11"></path><path d="M10.5 16.5 13 14"></path><path d="m12 6 6 6 2.3-2.3a2.4 2.4 0 0 0 0-3.4l-2.6-2.6a2.4 2.4 0 0 0-3.4 0Z"></path></svg><span style="font-size:11.5px;color:#3a3d45">interrupted</span></div>
+            <div style="display:flex;flex-direction:column;align-items:center;gap:8px"><span style="display:inline-flex;align-items:center;gap:3px;padding:3px 7px;border-radius:999px;background:#fef3c7;color:#8a4b0a;font-size:12px;font-weight:700"><svg class="ic" viewBox="0 0 24 24" style="width:11px;height:11px;stroke-width:2.6"><path d="m17 2 4 4-4 4"></path><path d="M3 11v-1a4 4 0 0 1 4-4h14"></path><path d="m7 22-4-4 4-4"></path><path d="M21 13v1a4 4 0 0 1-4 4H3"></path></svg>×6</span><span style="font-size:11.5px;color:#3a3d45">grinding</span></div>
+          </div>
+        </div>
+        <figure style="margin:0;border-radius:22px;overflow:hidden;border:1px solid #dcdce2;box-shadow:0 30px 60px -40px rgba(17,18,22,.45);background:#fff">
+          <img src="/_blob/62d83c9b1f8765af70d0c80bd67432a7" alt="kantan's running view: 'Still going.' and the sentence 'Each pass or fail above is the exit code of npm test, read by kantan itself.'" style="display:block;width:100%;height:auto">
+          <figcaption style="padding:12px 16px;font-size:13.5px;color:#4a4e59;border-top:1px solid #eeeef1">In the product's own words: <em>"What the agent says about its own work is never used."</em></figcaption>
+        </figure>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="not" style="margin-top:clamp(80px,10vw,140px);padding:clamp(80px,10vw,130px) clamp(16px,4vw,48px);background:#111216;color:#f4f4f6;position:relative;overflow:hidden">
+  <span class="jp" aria-hidden="true" style="position:absolute;right:-2%;bottom:-8%;font-size:clamp(160px,26vw,380px);font-weight:900;line-height:1;color:rgba(255,255,255,.035);pointer-events:none">簡単</span>
+  <div style="position:relative;max-width:1180px;margin:0 auto">
+    <div class="rv m" style="font-size:13px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:#ff8a4c">Chapter 5 · what this is not</div>
+    <h2 class="rv" style="margin:14px 0 0;font-size:clamp(36px,5.4vw,76px);line-height:1;font-weight:800;letter-spacing:-.045em">The opposite of an agent framework.</h2>
+    <ul style="list-style:none;margin:44px 0 0;padding:0;display:flex;flex-direction:column;gap:clamp(8px,1.4vw,16px);font-size:clamp(30px,5vw,68px);line-height:1.08;font-weight:780;letter-spacing:-.04em">
+      <li class="rv"><span class="strike" style="color:#8a8f9c">An org chart of agents</span></li>
+      <li class="rv"><span class="strike" style="color:#8a8f9c">Autonomy</span> <span style="font-size:.36em;font-weight:500;letter-spacing:0;color:#c9cad3;vertical-align:middle">nothing wakes itself up</span></li>
+      <li class="rv"><span class="strike" style="color:#8a8f9c">Multi-agent orchestration</span></li>
+      <li class="rv"><span class="strike" style="color:#8a8f9c">A tracker database</span></li>
+      <li class="rv"><span class="strike" style="color:#8a8f9c">Worktree sprawl</span></li>
+    </ul>
+    <p class="rv" style="margin:48px 0 0;max-width:30ch;font-size:clamp(24px,3vw,38px);line-height:1.2;font-weight:700;letter-spacing:-.03em">One task. One human decision. <span style="color:#ff8a4c">Your</span> tests. That's the whole thing.</p>
+
+    <div class="rv" style="margin-top:56px;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(360px,100%),1fr));gap:28px;align-items:center">
+      <div>
+        <h3 style="margin:0;font-size:clamp(24px,2.6vw,32px);font-weight:750;letter-spacing:-.03em">One run per project.</h3>
+        <p style="margin:12px 0 0;font-size:17px;line-height:1.6;color:#c9cad3">Two agents never share a working tree. A task that can't start yet tells you why in a sentence, instead of just greying out a button.</p>
+        <p class="m" style="margin:18px 0 0;font-size:13.5px;color:#ff8a4c">"kantan runs one task at a time, so this one can start once that run finishes or you stop it."</p>
+      </div>
+      <figure style="margin:0;border-radius:20px;overflow:hidden;border:1px solid rgba(255,255,255,.12);box-shadow:0 40px 80px -40px rgba(0,0,0,.8);rotate:1.5deg">
+        <img src="/_blob/3a74aa1af5d962f6885e0b13dc9f740a" alt="kantan's start panel with a notice that another run is waiting, and Start planning disabled" style="display:block;width:100%;height:auto">
+      </figure>
+    </div>
+  </div>
+</section>
+
+<section id="notes" style="padding:clamp(80px,10vw,140px) clamp(16px,4vw,48px) 40px">
+  <div style="max-width:1180px;margin:0 auto">
+    <div class="rv m" style="font-size:13px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:#ff6a1a">Chapter 6 · field notes</div>
+    <h2 class="rv" style="margin:14px 0 0;max-width:20ch;font-size:clamp(36px,5.4vw,76px);line-height:1;font-weight:800;letter-spacing:-.045em;text-wrap:balance">Things we learned about <span class="m" style="font-weight:600;letter-spacing:-.05em">claude -p</span> the expensive way.</h2>
+    <p class="rv" style="margin:22px 0 0;max-width:56ch;font-size:18px;line-height:1.6;color:#4a4e59">Useful even if you never run kantan. Tap a card to flip it. The scripts are in <span class="m" style="font-size:16px">docs/probes/</span>.</p>
+    <div class="rv" style="margin-top:40px;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(300px,100%),1fr));gap:16px">
+      <sc-for list="{{cards}}" as="c" hint-placeholder-count="5">
+        <button onClick="{{c.flip}}" aria-pressed="{{c.on}}" aria-label="{{c.aria}}" class="flip" style="position:relative;height:250px;padding:0;border:0;background:transparent;text-align:left">
+          <span style="position:absolute;inset:0;display:block;transform-style:preserve-3d;transition:transform .7s cubic-bezier(.2,.7,.2,1);transform:{{c.rot}}">
+            <span class="face" style="background:#fff;border:1px solid #e7e7eb;box-shadow:0 20px 50px -36px rgba(17,18,22,.45)">
+              <span class="m" style="font-size:12.5px;font-weight:600;color:#ff6a1a">finding {{c.n}}</span>
+              <span style="margin-top:14px;font-size:clamp(22px,2.2vw,27px);line-height:1.15;font-weight:750;letter-spacing:-.03em;color:#111216">{{c.front}}</span>
+              <span style="margin-top:auto;display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:600;color:#4b4bc8">Flip it<svg class="ic" aria-hidden="true" viewBox="0 0 24 24" style="width:14px;height:14px"><path d="M3 12a9 9 0 0 1 15-6.7L21 8"></path><path d="M21 3v5h-5"></path></svg></span>
+            </span>
+            <span class="face" style="background:#111216;color:#f4f4f6;transform:rotateY(180deg)">
+              <span class="m" style="font-size:12.5px;font-weight:600;color:#ff8a4c">so…</span>
+              <span style="margin-top:12px;font-size:15.5px;line-height:1.55;color:#e4e4e9">{{c.back}}</span>
+            </span>
+          </span>
+        </button>
+      </sc-for>
+    </div>
+  </div>
+</section>
+
+<section id="status" style="padding:clamp(80px,10vw,140px) clamp(16px,4vw,48px) 40px">
+  <div style="max-width:1180px;margin:0 auto">
+    <div class="rv m" style="font-size:13px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:#ff6a1a">Chapter 7 · honest status</div>
+    <h2 class="rv" style="margin:14px 0 0;max-width:20ch;font-size:clamp(36px,5.4vw,76px);line-height:1;font-weight:800;letter-spacing:-.045em;text-wrap:balance">It works, and it's rough in places.</h2>
+
+    <div class="rv" style="margin-top:40px;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(220px,100%),1fr));gap:14px">
+      <div style="padding:24px;border-radius:24px;background:#fff;border:1px solid #e7e7eb"><div class="cnt" style="--n:73;font-size:clamp(48px,6vw,76px);line-height:1;font-weight:800;letter-spacing:-.05em;font-variant-numeric:tabular-nums"></div><div style="margin-top:8px;font-size:15px;color:#4a4e59">modules</div></div>
+      <div style="padding:24px;border-radius:24px;background:#fff;border:1px solid #e7e7eb"><div class="cnt" style="--n:2576;font-size:clamp(48px,6vw,76px);line-height:1;font-weight:800;letter-spacing:-.05em;font-variant-numeric:tabular-nums"></div><div style="margin-top:8px;font-size:15px;color:#4a4e59">tests</div></div>
+      <div style="padding:24px;border-radius:24px;background:#fff;border:1px solid #e7e7eb"><div class="cnt" style="--n:1;font-size:clamp(48px,6vw,76px);line-height:1;font-weight:800;letter-spacing:-.05em;font-variant-numeric:tabular-nums"></div><div style="margin-top:8px;font-size:15px;color:#4a4e59">skipped: the live smoke test, so CI can't spend money</div></div>
+      <div style="padding:24px;border-radius:24px;background:#ff6a1a;color:#1a0b02"><div class="cnt" style="--n:1;font-size:clamp(48px,6vw,76px);line-height:1;font-weight:800;letter-spacing:-.05em;font-variant-numeric:tabular-nums"></div><div style="margin-top:8px;font-size:15px;font-weight:560">machine it has ever run on (WSL2). Be number two?</div></div>
+    </div>
+
+    <div class="rv" style="margin-top:28px;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(380px,100%),1fr));gap:20px;align-items:start">
+      <div style="padding:26px 28px;border-radius:26px;background:#fff;border:1px solid #e7e7eb">
+        <h3 style="margin:0;font-size:20px;font-weight:700;letter-spacing:-.02em">Rough edges, by name</h3>
+        <ul style="margin:16px 0 0;padding:0;list-style:none;display:flex;flex-direction:column;gap:12px;font-size:15.5px;line-height:1.5;color:#3a3d45">
+          <li style="display:grid;grid-template-columns:18px minmax(0,1fr);gap:10px"><span aria-hidden="true" style="width:8px;height:8px;margin-top:8px;border-radius:50%;background:#ff6a1a"></span><span>The usage view only sees what kantan's own runs reported.</span></li>
+          <li style="display:grid;grid-template-columns:18px minmax(0,1fr);gap:10px"><span aria-hidden="true" style="width:8px;height:8px;margin-top:8px;border-radius:50%;background:#ff6a1a"></span><span>A second account has to be named by hand, once.</span></li>
+          <li style="display:grid;grid-template-columns:18px minmax(0,1fr);gap:10px"><span aria-hidden="true" style="width:8px;height:8px;margin-top:8px;border-radius:50%;background:#ff6a1a"></span><span><span class="m" style="font-size:14px">src/run.ts</span> is 2,695 lines of one state machine.</span></li>
+          <li style="display:grid;grid-template-columns:18px minmax(0,1fr);gap:10px"><span aria-hidden="true" style="width:8px;height:8px;margin-top:8px;border-radius:50%;background:#ff6a1a"></span><span>One 731 KB bundle, no code splitting.</span></li>
+          <li style="display:grid;grid-template-columns:18px minmax(0,1fr);gap:10px"><span aria-hidden="true" style="width:8px;height:8px;margin-top:8px;border-radius:50%;background:#ff6a1a"></span><span>An event a future CLI adds shows up as raw JSON until someone gives it a row. It stays visible, though.</span></li>
+        </ul>
+      </div>
+      <figure style="margin:0;border-radius:22px;overflow:hidden;border:1px solid #dcdce2;box-shadow:0 30px 60px -40px rgba(17,18,22,.45);background:#fff;rotate:-1deg">
+        <img src="/_blob/f7830b62b87747f719e366058c6848e2" alt="kantan's Claude accounts screen, with the footnote 'kantan only sees what its own runs report.'" style="display:block;width:100%;height:auto">
+        <figcaption style="padding:12px 16px;font-size:13.5px;color:#4a4e59;border-top:1px solid #eeeef1">Even the accounts screen admits what it can't see.</figcaption>
+      </figure>
+    </div>
+  </div>
+</section>
+
+<footer style="margin-top:clamp(80px,10vw,140px);padding:clamp(64px,8vw,110px) clamp(16px,4vw,48px) 48px;background:#fff;border-top:1px solid #e7e7eb;text-align:center;position:relative;overflow:hidden">
+  <div style="max-width:900px;margin:0 auto">
+    <div class="jp rv" lang="ja" style="font-size:clamp(90px,16vw,200px);line-height:1;font-weight:900;letter-spacing:-.04em">簡単</div>
+    <p class="rv" style="margin:18px 0 0;font-size:clamp(22px,2.6vw,32px);line-height:1.25;font-weight:700;letter-spacing:-.025em">Approve the plan. Leave the room.<br><span style="color:#ff6a1a">Come back to an exit code.</span></p>
+    <div class="rv" style="margin-top:30px;display:flex;flex-wrap:wrap;justify-content:center;gap:10px">
+      <a href="#top" class="cta" style="height:52px;padding:0 22px;border-radius:999px;background:#111216;color:#fff;font-size:15.5px;font-weight:620;display:inline-flex;align-items:center;gap:8px;text-decoration:none;transition:transform .2s,background .2s"><svg class="ic" aria-hidden="true" viewBox="0 0 24 24" style="width:16px;height:16px"><polyline points="4 17 10 11 4 5"></polyline><line x1="12" x2="20" y1="19" y2="19"></line></svg>Back to the three lines</a>
+      <a href="{{repoUrl}}" class="ghost" style="height:52px;padding:0 22px;border-radius:999px;border:1px solid #d9d9df;background:#fafafb;color:#111216;font-size:15.5px;font-weight:620;display:inline-flex;align-items:center;text-decoration:none">Read the source</a>
+    </div>
+    <p class="m" style="margin:40px 0 0;font-size:12.5px;line-height:1.8;color:#5f6370">Runs on 127.0.0.1 · one process, one port · talks to no service<br>spawns the real claude binary, so your CLAUDE.md, skills, hooks and auth load as they do in your terminal<br>a hobby project, made with care and a lot of exit codes</p>
+  </div>
+</footer>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"repoUrl":{"editor":"text","default":"https://github.com/"},"$preview":{"width":1440,"height":9000}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { conf: 100, stage: 1, phase: 'gate', step: 0, revised: false, note: 'Keep unknown fields under row.meta instead of dropping them.', suite: true, drain: false, flip: {}, copied: false };
+    this._timers = [];
+  }
+  clearAll() { this._timers.forEach((t) => clearTimeout(t)); this._timers = []; }
+  later(fn, ms) { this._timers.push(setTimeout(fn, ms)); }
+  componentWillUnmount() { this.clearAll(); }
+  renderVals() {
+    const s = this.state;
+    const c = s.conf;
+    const quip = c <= 15 ? 'Refreshingly humble. Still failing.' : c <= 60 ? 'Hedging. Still failing.' : c < 100 ? 'Pretty bold. Still failing.' : 'Absolutely certain. Still failing.';
+    const stages = [
+      { n: '01', name: 'Plan', who: 'agent', title: 'Plan: read the repo, touch nothing.', body: 'An agent reads your repo and writes a plan to a markdown file. It touches no code, so a bad plan costs you a minute of reading and nothing else.', code: 'docs/plans/2026-10-13-importer-t1.md\n\n## What I will change\n1. src/importer/manifest.ts\n2. src/importer/rows.ts\n3. test/importer.test.ts' },
+      { n: '02', name: 'Gate', who: 'you', title: 'Gate: the only stage that is yours.', body: 'The plan, rendered as markdown. Read it the way you would read a teammate’s draft, then approve it or send it back with a note. Nothing moves until you decide.', code: 'Is this plan right?\n\n[ Approve plan  ⌘↵ ]   [ Send back ]\n\nyour note goes back to the planning\nsession byte for byte' },
+      { n: '03', name: 'Implement', who: 'fresh agent', title: 'Implement: a fresh agent, its own branch.', body: 'A new conversation on the task’s own branch. Fresh on purpose, so planning and implementing can run on different models without cold-starting the prompt cache.', code: 'git switch -c kantan/importer-t1\n\nEDIT src/importer/manifest.ts  +18 −2\nEDIT src/importer/rows.ts      +24\nEDIT test/importer.test.ts     +41' },
+      { n: '04', name: 'Test', who: 'kantan', title: 'Test: the server runs your suite.', body: 'kantan runs your own test command and reads the exit code. The agent’s report never counts. No test command? Then it says Self-checked, never passed.', code: '$ bun run check\n\n12 passing\nexit 0   ← read by kantan, not by the agent' },
+      { n: '05', name: 'Refine', who: 'agent', title: 'Refine: fail, fix, test again.', body: 'A non-zero exit goes back to refine. The same failure repeating raises --effort, keeping the context. Three identical failures at top effort is “stalled”: calm, not red, because nothing got worse.', code: 'exit 1  → refine\nexit 1  → refine (same failure)\nexit 1  → --effort high\nexit 0  → passed' }
+    ];
+    const st = stages[s.stage];
+    const evAll = [
+      { t: '17:58', text: 'You approved the plan', sub: '', dot: 'background:#111216', cls: '', chip: '', cs: '' },
+      { t: '+4m', text: 'Implement', sub: 'edited src/importer/map.ts', dot: 'background:#5b5bd6', cls: '', chip: '', cs: '' },
+      { t: '+9m', text: 'npm test', sub: '9 passing, 1 failing', dot: 'background:#d92d3a', cls: 'm', chip: 'exit 1', cs: 'background:#fdecee;color:#a61b27' },
+      { t: '+11m', text: 'Refine', sub: 'warn once per dropped field', dot: 'background:#5b5bd6', cls: '', chip: '', cs: '' },
+      { t: '+14m', text: 'npm test', sub: '10 passing', dot: 'background:#0f8a5f', cls: 'm', chip: 'exit 0', cs: 'background:#0f8a5f;color:#fff' }
+    ];
+    const running = s.phase === 'running';
+    const done = s.phase === 'done';
+    const shown = (running || done) ? evAll.slice(0, done ? 5 : s.step) : [];
+    const mins = [0, 0, 4, 9, 11, 14][Math.min(s.step, 5)];
+    const atGate = s.phase === 'gate';
+    const cards = [
+      { front: 'A question looks exactly like “done”.', back: 'AskUserQuestion doesn’t exist in -p mode. The agent asks in prose and exits subtype: success, so a question and a completion are indistinguishable by message type. Never infer completion from exit status. kantan watches for a missing sentinel, parks the run, and sends your reply to the session that asked.' },
+      { front: '--max-budget-usd bounds one process, not your run.', back: 'Cost resets on every --resume, so a per-process ceiling silently restarts at each gate. kantan tracks the total itself and passes ceiling − spent.' },
+      { front: '--resume takes a different --effort.', back: 'And keeps the context. That’s what makes raising the effort on a repeated failure possible without starting over.' },
+      { front: 'Switching models mid-conversation is a trap.', back: 'It cold-starts the prompt cache and drops thinking blocks the new model can’t read. So implement gets a fresh conversation instead.' },
+      { front: 'Hook events flood the stream.', back: 'Expect about 20 system/hook_* events before the first real one. Plan for them, or your run record is mostly noise.' }
+    ];
+    const flip = s.flip || {};
+    return {
+      repoUrl: this.props.repoUrl ?? 'https://github.com/',
+      copyLabel: s.copied ? 'Copied' : 'Copy',
+      copy: () => {
+        try { navigator.clipboard.writeText('bun install\nbun run build\nbun run server'); } catch (e) {}
+        this.setState({ copied: true });
+        this.later(() => this.setState({ copied: false }), 1800);
+      },
+      conf: c,
+      onConf: (e) => this.setState({ conf: Number(e.target.value) }),
+      quip: quip,
+      stages: stages.map((x, i) => ({
+        n: x.n, name: x.name, who: x.who, on: i === s.stage,
+        style: i === s.stage
+          ? (i === 1 ? 'border:0;background:#ff6a1a;color:#1a0b02;box-shadow:0 18px 40px -18px rgba(255,106,26,.8)' : 'border:0;background:#111216;color:#fff;box-shadow:0 18px 40px -20px rgba(17,18,22,.7)')
+          : (i === 1 ? 'border:2px dashed #ff6a1a;background:#fff1e8;color:#9a3b06' : 'border:1px solid #e7e7eb;background:#fff;color:#111216'),
+        pick: () => this.setState({ stage: i })
+      })),
+      stageKey: 'st' + s.stage,
+      stageTitle: st.title, stageBody: st.body, stageCode: st.code,
+      atGate: atGate,
+      replying: s.phase === 'replying',
+      revising: s.phase === 'revising',
+      busy: running || done,
+      busyText: done ? 'Done while you were out. Away 14 min.' : 'Running. You are not needed. Go.',
+      gateBeam: atGate || s.phase === 'replying' ? 'beam' : '',
+      gateEyebrow: atGate ? 'Needs you · plan ready' : (s.phase === 'replying' ? 'Replying to the draft' : (s.phase === 'revising' ? 'Revising' : (done ? 'Approved · passed' : 'Approved · running'))),
+      gateEyebrowColor: (atGate || s.phase === 'replying') ? '#9a3b06' : (done ? '#0f7a54' : '#3a3aa8'),
+      planVersion: s.revised ? 'plan v2' : 'plan v1',
+      line2: s.revised ? 'Keep unknown fields under row.meta, and warn once per field' : 'Drop unknown fields, and warn once per field',
+      line2Style: s.revised ? 'background:#fff1e8;margin:0 -10px;padding:4px 10px;border-radius:10px' : '',
+      approve: () => {
+        this.clearAll();
+        this.setState({ phase: 'running', step: 1 });
+        [2, 3, 4, 5].forEach((k) => this.later(() => this.setState({ step: k }), (k - 1) * 1100));
+        this.later(() => this.setState({ phase: 'done' }), 5200);
+      },
+      openReply: () => this.setState({ phase: 'replying' }),
+      note: s.note,
+      onNote: (e) => this.setState({ note: e.target.value }),
+      sendBack: () => { this.clearAll(); this.setState({ phase: 'revising' }); this.later(() => this.setState({ phase: 'gate', revised: true }), 1500); },
+      reset: () => { this.clearAll(); this.setState({ phase: 'gate', step: 0 }); },
+      events: shown.map((e) => ({ t: e.t, text: e.text, sub: e.sub, dot: e.dot, cls: e.cls, chip: e.chip, hasChip: !!e.chip, chipStyle: e.cs })),
+      noEvents: shown.length === 0,
+      done: done,
+      youLeft: running ? '84%' : '13%',
+      youAway: running,
+      scrGate: !running && !done, scrRun: running, scrDone: done,
+      awayMins: done ? 14 : (running ? mins : 0),
+      roomCaption: running ? 'You, getting a coffee.' : (done ? 'You, back. It passed while you were out.' : 'You, reading the plan.'),
+      suite: s.suite, noSuite: !s.suite,
+      toggleSuite: () => this.setState({ suite: !s.suite }),
+      switchBg: s.suite ? 'background:#0f8a5f' : 'background:#c9cad3',
+      knob: s.suite ? '28px' : '4px',
+      suiteKey: s.suite ? 'y' : 'n',
+      verdict: s.suite ? 'Passed · exit 0' : 'Self-checked',
+      verdictStyle: s.suite ? 'color:#0f7a54' : 'color:#5f6370',
+      verifiedBy: s.suite ? 'tests' : 'self',
+      suiteExplain: s.suite ? 'kantan ran npm test and saw exit 0, so it says passed. That word is only ever earned this way.' : 'No suite, so the agent checked its own work. The screen says exactly that: no exit code, no green tick, no word "passed".',
+      drain: s.drain,
+      toggleDrain: () => this.setState({ drain: !s.drain }),
+      drainLabel: s.drain ? 'Bring colour back' : 'Drain the colour',
+      drainStyle: s.drain ? 'filter:grayscale(1)' : 'filter:none',
+      cards: cards.map((x, i) => ({
+        n: String(i + 1).padStart(2, '0'), front: x.front, back: x.back, on: !!flip[i],
+        aria: (flip[i] ? x.back : x.front),
+        rot: flip[i] ? 'rotateY(180deg)' : 'rotateY(0deg)',
+        flip: () => { const f = Object.assign({}, flip); f[i] = !flip[i]; this.setState({ flip: f }); }
+      }))
+    };
+  }
+}
+</script>
+</body>
+</html>
