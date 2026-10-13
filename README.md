@@ -9,6 +9,37 @@ built from. `build.ts` reads that artboard and emits `index.html`, so the
 canvas stays the single source: a revision there is one command here, and there
 is no second copy to drift.
 
+## Installing kantan from this domain
+
+```bash
+curl kantan.sh | sh              # once the Worker below is deployed
+curl -fsSL kantan.sh/install.sh | sh    # works on any static host
+```
+
+`install.sh` is a copy of `kantan.sh` in the main repo, kept here so the domain
+can serve it. It is short on purpose: read it before you run it.
+
+**The bare `curl kantan.sh | sh` needs an edge rule**, because the root has to
+answer a shell script to curl and the page to a browser, and no static host can
+look at a request to decide. `worker.js` is that rule — a Cloudflare Worker on
+`kantan.sh/*`:
+
+```bash
+npx wrangler deploy worker.js --name kantan-sh --compatibility-date 2026-01-01
+# then add the route kantan.sh/* to it in the dashboard
+```
+
+It sniffs the `User-Agent`, which is a guess, so it fails toward the page:
+only an explicitly recognised terminal agent gets the script, and anything
+unrecognised — or with no User-Agent at all — gets HTML. Serving the script to
+a browser shows a wall of shell to someone who wanted to read; serving the page
+to curl pipes HTML into `sh`, which errors and does nothing. The second is the
+cheaper mistake.
+
+Until the Worker is up, the `/install.sh` form above is the one to document.
+
+## Building the page
+
 ```bash
 bun run build     # Landing.dc.html -> index.html
 bun run serve     # look at it on 127.0.0.1:4173
