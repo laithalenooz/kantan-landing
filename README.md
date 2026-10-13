@@ -12,11 +12,17 @@ is no second copy to drift.
 ## Installing kantan
 
 ```bash
-curl get.kantan.sh | sh
+curl -fsSL https://get.kantan.sh | sh
 ```
 
 That lives in its own repo, [`kantan-get`](https://github.com/laithalenooz/kantan-get),
 on the `get.` subdomain — not here, and not on the bare domain.
+
+**Give curl the scheme.** `curl get.kantan.sh | sh` does not work: curl assumes
+`http` with no scheme, the host 308s to `https` with a body of `Redirecting...`,
+and curl without `-L` prints that body and exits **0** — so `sh` is handed the
+word `Redirecting...` and the pipeline looks like it ran. `-f` does not catch a
+308. With the scheme explicit there is no hop to follow.
 
 **Why not `curl kantan.sh | sh`.** This domain has to be the website. One URL
 cannot honestly answer both a browser and `curl`: a static host maps one path to
@@ -27,7 +33,7 @@ is the wrong trade, and it was built and then deleted in favour of the
 subdomain, which has no ambiguity to resolve. It is what rustup does with
 `sh.rustup.rs`.
 
-`install.sh` stays here too, so `curl kantan.sh/install.sh | sh` also works —
+`install.sh` stays here too, so `curl -fsSL https://kantan.sh/install.sh | sh` also works —
 an explicit path is unambiguous on any host.
 
 ## Building the page

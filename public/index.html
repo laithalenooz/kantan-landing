@@ -116,7 +116,7 @@ a{color:#4b4bc8}a:hover{color:#3a3aa8}
         <span class="m" style="font-size:12px;color:#8a8f9c">one line, and you can read it first</span>
         <button onClick="{{copy}}" style="margin-left:auto;height:30px;padding:0 12px;border-radius:999px;border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.06);color:#f4f4f6;font-size:12.5px;font-weight:560;display:inline-flex;align-items:center;gap:6px"><svg class="ic" aria-hidden="true" viewBox="0 0 24 24" style="width:13px;height:13px"><rect width="14" height="14" x="8" y="8" rx="2"></rect><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path></svg>{{copyLabel}}</button>
       </div>
-      <pre class="m" style="margin:0;padding:12px 18px 4px;font-size:14.5px;line-height:1.9;overflow-x:auto"><span style="color:#ff8a4c">$</span> curl get.kantan.sh | sh<span class="caret" style="display:inline-block;width:.6em;height:1.1em;margin-left:4px;vertical-align:-3px;background:#ff6a1a"></span></pre>
+      <pre class="m" style="margin:0;padding:12px 18px 4px;font-size:14.5px;line-height:1.9;overflow-x:auto"><span style="color:#ff8a4c">$</span> curl -fsSL https://get.kantan.sh | sh<span class="caret" style="display:inline-block;width:.6em;height:1.1em;margin-left:4px;vertical-align:-3px;background:#ff6a1a"></span></pre>
       <div class="m" style="padding:0 18px 16px;font-size:12px;color:#8a8f9c">read the source: <a href="https://kantan.sh/install.sh" style="color:#8a8f9c;text-decoration:underline;text-underline-offset:3px">kantan.sh/install.sh</a></div>
     </div>
   </div>
@@ -515,7 +515,7 @@ class Component extends DCLogic {
       repoUrl: this.props.repoUrl ?? 'https://github.com/',
       copyLabel: s.copied ? 'Copied' : 'Copy',
       copy: () => {
-        try { navigator.clipboard.writeText('curl get.kantan.sh | sh'); } catch (e) {}
+        try { navigator.clipboard.writeText('curl -fsSL https://get.kantan.sh | sh'); } catch (e) {}
         this.setState({ copied: true });
         this.later(() => this.setState({ copied: false }), 1800);
       },
