@@ -332,9 +332,9 @@ a{color:#4b4bc8}a:hover{color:#3a3aa8}
 
       <div style="display:flex;flex-direction:column;gap:14px">
         <div style="border-radius:26px;background:#fff;border:1px solid #e7e7eb;padding:22px 24px">
-          <div style="display:flex;flex-wrap:wrap;align-items:center;gap:10px">
-            <h3 style="margin:0;font-size:18px;font-weight:700;letter-spacing:-.015em">Ten states. Readable with the colour drained.</h3>
-            <button onClick="{{toggleDrain}}" aria-pressed="{{drain}}" class="ghost" style="margin-left:auto;height:36px;padding:0 14px;border-radius:999px;border:1px solid #d9d9df;background:#fafafb;font-size:13px;font-weight:600;color:#1e2026">{{drainLabel}}</button>
+          <div style="display:flex;flex-wrap:nowrap;align-items:center;gap:10px">
+            <h3 style="margin:0;flex:1 1 auto;min-width:0;font-size:18px;font-weight:700;letter-spacing:-.015em;text-wrap:balance">Ten states. Readable with the colour drained.</h3>
+            <button onClick="{{toggleDrain}}" aria-pressed="{{drain}}" class="ghost" style="margin-left:auto;flex:none;height:36px;min-width:150px;padding:0 14px;border-radius:999px;border:1px solid #d9d9df;background:#fafafb;font-size:13px;font-weight:600;color:#1e2026;white-space:nowrap;transition:background .25s,border-color .25s">{{drainLabel}}</button>
           </div>
           <div style="margin-top:18px;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:14px 8px;text-align:center;transition:filter .5s;{{drainStyle}}">
             <div style="display:flex;flex-direction:column;align-items:center;gap:8px"><span style="width:22px;height:22px;border-radius:50%;border:2.5px solid #a3a7b1;box-sizing:border-box"></span><span style="font-size:11.5px;color:#3a3d45">open</span></div>
