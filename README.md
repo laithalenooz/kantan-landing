@@ -1,6 +1,7 @@
 # kantan-landing
 
-The landing page for [kantan](https://github.com/laithalenooz/kantan).
+The landing page for [kantan](https://github.com/laithalenooz/kantan), served at
+**[kantan.sh](https://kantan.sh)**.
 
 **The page is generated, not hand-written.** Its design lives as the `Landing`
 artboard in kantan's design canvas, alongside the artboards the app itself was
@@ -14,8 +15,26 @@ bun run serve     # look at it on 127.0.0.1:4173
 bun run dev       # both
 ```
 
+```bash
+bun run og        # re-render og.png, the 1200x630 social card
+```
+
 No dependencies, no bundler, no framework. `index.html` is committed, so
 publishing it is a static upload of this directory.
+
+## Hosting
+
+`CNAME` holds `kantan.sh`, which is what GitHub Pages reads; any other static
+host wants the same name set in its own dashboard and will ignore the file.
+
+The page declares `kantan.sh` as its canonical url, so a Pages or preview host
+serving the same bytes does not compete with it in a search index. The social
+card is an **absolute** url for a related reason: a relative `og:image`
+resolves against whoever is rendering the card, so it silently shows nothing.
+
+`og.html` is the card's own page rather than a crop of the hero — a crop of a
+responsive layout lands somewhere different whenever the type scale changes,
+and a card with the headline cut in half is worse than no card.
 
 ## How the generation works
 

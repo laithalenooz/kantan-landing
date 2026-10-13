@@ -1,0 +1,47 @@
+<!doctype html>
+<!-- The social card, rendered at exactly 1200x630 by `bun run og`.
+     Its own page rather than a crop of the landing hero: a crop of a
+     responsive layout lands somewhere different every time the type scale
+     changes, and a card with the headline cut in half is worse than none. -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>kantan og</title>
+<link rel="icon" href="/favicon.svg">
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700;800&family=Geist+Mono:wght@400;500&family=Noto+Sans+JP:wght@900&display=swap" rel="stylesheet">
+<style>
+  html,body{margin:0;padding:0}
+  body{width:1200px;height:630px;overflow:hidden;background:#f4f4f6;color:#111216;
+       font-family:'Geist',ui-sans-serif,system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+  .wrap{position:relative;width:1200px;height:630px;padding:64px 72px;box-sizing:border-box;
+        display:flex;flex-direction:column;justify-content:center}
+  .dots{position:absolute;inset:0;background-image:radial-gradient(#d3d4db 1px,transparent 1px);
+        background-size:22px 22px;
+        mask-image:radial-gradient(ellipse 70% 60% at 30% 40%,#000 10%,transparent 72%)}
+  .jp{position:absolute;right:-30px;top:-70px;font-family:'Noto Sans JP',sans-serif;font-weight:900;
+      font-size:400px;line-height:1;color:rgba(17,18,22,.04);letter-spacing:-.05em}
+  .brand{position:relative;display:flex;align-items:center;gap:12px;font-size:26px;font-weight:700;letter-spacing:-.03em}
+  .mark{width:38px;height:38px;border-radius:11px;background:linear-gradient(145deg,#2a2b31,#0e0f12);
+        display:grid;place-items:center}
+  .mark i{width:12px;height:12px;border-radius:50%;background:#ff6a1a;display:block}
+  h1{position:relative;margin:34px 0 0;font-size:92px;line-height:.95;font-weight:800;letter-spacing:-.05em;max-width:17ch}
+  h1 em{font-style:normal;color:#ff6a1a}
+  p{position:relative;margin:26px 0 0;max-width:44ch;font-size:25px;line-height:1.45;color:#4a4e59}
+  .m{font-family:'Geist Mono',ui-monospace,monospace;font-size:.88em;color:#111216}
+  .foot{position:relative;margin-top:34px;display:flex;align-items:center;gap:14px;
+        font-family:'Geist Mono',ui-monospace,monospace;font-size:19px;color:#5f6370}
+  .pill{padding:7px 16px;border-radius:999px;background:#111216;color:#f4f4f6;font-size:17px;font-weight:600;
+        font-family:'Geist',sans-serif}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <span class="jp" aria-hidden="true">簡単</span>
+  <div class="dots" aria-hidden="true"></div>
+  <div class="brand"><span class="mark"><i></i></span> kantan</div>
+  <h1>Approve the plan.<br><em>Leave the room.</em></h1>
+  <p>It drives the real <span class="m">claude</span> CLI through one task at a time, then runs <strong>your</strong> tests until the exit code says they pass.</p>
+  <div class="foot"><span class="pill">kantan.sh</span> one task · one gate · one exit code</div>
+</div>
+</body>
+</html>
